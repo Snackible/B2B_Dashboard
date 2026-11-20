@@ -48,23 +48,26 @@ async function fetchPendingSales() {
 export default async function handler(req, res) {
   res.setHeader('Access-Control-Allow-Origin', '*');
   try {
-    const [ccbdData, opsData, masterLog, pendingDelivery, pendingSales] = await Promise.all([
+    // Sales_Log/Ads_Log/InMails live on OPS_ID too, but /api/sheets?source=ops
+    // already fetches those same tabs for the Sales tab — re-reading them here
+    // doubled our per-minute Sheets API read volume on every page load and was
+    // tripping Google's rate limit (429) under normal traffic. Only Master_Log
+    // (unique to this endpoint) still needs an OPS_ID read.
+    const [ccbdData, masterLog, pendingDelivery, pendingSales] = await Promise.all([
       fetchTabs(CCBD_ID, { CCBD_BAU: 'BAU', CCBD_Festive: 'Festive', CCBD_Diwali: 'Diwali CCBD' }),
-      fetchTabs(OPS_ID, { Sales_Log: 'Sales_Log', Ads_Log: 'Ads_Log', InMails: 'InMails ' }),
       fetchMasterLog(),
       fetchPendingDelivery(),
       fetchPendingSales(),
     ]);
 
     // parseCcbd/parseCcbd-for-Diwali expect header-less rows (Apps Script sent
-    // them pre-stripped); parseCcbdFestive/parseAds/parseInmails/parseSales
-    // all strip their own header, so those are left as-is.
+    // them pre-stripped); parseCcbdFestive strips its own header, so that one
+    // is left as-is.
     ccbdData.CCBD_BAU = ccbdData.CCBD_BAU.slice(1);
     ccbdData.CCBD_Diwali = ccbdData.CCBD_Diwali.slice(1);
 
     const merged = {
       ...ccbdData,
-      ...opsData,
       Master_Log: masterLog,
       Pending_Delivery: pendingDelivery,
       Pending_Sales: pendingSales,

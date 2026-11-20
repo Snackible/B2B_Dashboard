@@ -21,8 +21,8 @@ export const BAR_SOURCES = {
   ov: ['sheet', 'legacy'],
   sales: ['sheet'],
   mails: ['legacy', 'noor'],
-  ads: ['legacy'],
-  inmails: ['legacy'],
+  ads: ['sheet'],
+  inmails: ['sheet'],
   ccbd: ['legacy'],
   pendsales: ['legacy'],
   pend: ['legacy'],
@@ -65,16 +65,20 @@ export function useDashboardData() {
       settle(src);
     };
 
+    // Sales_Log/Ads_Log/InMails all live on this one "ops" fetch.
     getJson(SHEET_URL, signal, { timeout: 60000 })
       .then((raw) => {
-        const sales = parseSales(raw);
-        if (sales) patch({ sales });
+        const p = {};
+        const sales = parseSales(raw); if (sales) p.sales = sales;
+        const ads = parseAds(raw); if (ads) p.ads = ads;
+        const inmails = parseInmails(raw); if (inmails) p.inmails = inmails;
+        patch(p);
         setStatus({ text: 'live · google sheets', loading: false });
         settle('sheet');
       })
       .catch(onFail('sheet', 'SHEET_URL fetch error', () => setStatus({ text: 'cached data (fetch failed)', loading: false })));
 
-    // One fetch feeds Mails / Ads / InMails / CCBD / Pending Sales / Pending Delivery.
+    // One fetch feeds Mails / CCBD / Pending Sales / Pending Delivery.
     getJson(LEGACY_URL, signal, { timeout: 60000 })
       .then((raw) => {
         const p = {};
@@ -82,8 +86,6 @@ export function useDashboardData() {
           const ml = parseMasterLog(raw.Master_Log);
           Object.assign(p, { mlByDate: ml.byDate, mlByInd: ml.byInd, mlPrimary: ml.primary, mlFollowup: ml.followup, mlIndDate: ml.byIndDate });
         }
-        const ads = parseAds(raw); if (ads) p.ads = ads;
-        const inmails = parseInmails(raw); if (inmails) p.inmails = inmails;
         if (raw.Pending_Sales) p.pendingSales = parsePendingSales(raw.Pending_Sales);
         if (raw.CCBD_BAU) p.ccbd = parseCcbd(raw.CCBD_BAU);
         if (raw.CCBD_Festive) p.ccbdFestive = parseCcbdFestive(raw.CCBD_Festive);
