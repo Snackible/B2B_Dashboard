@@ -1,3 +1,10 @@
 node_modules
 dist
 .vercel
+
+# Never commit service-account keys or local env files
+*.env
+*.env.*
+*-*-*.json
+service-account*.json
+*credentials*.json

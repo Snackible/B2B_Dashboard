@@ -1,12 +1,28 @@
-// Apps Script web-app endpoints (each returns { "<Tab name>": [[row], …] }).
-export const SHEET_URL = 'https://script.google.com/macros/s/AKfycbwPVvV-1OACvRgDYtmHpTS9QnDbc556B-G_C-nvradUY_PGjP2NsDr1DTJydIu82ID8/exec';
-export const BD_URL = 'https://script.google.com/macros/s/AKfycbwZOjviZgLXKd0nuXKxiGHUeJ9vrqRHxv3_-Hdc1fX-5UrTSNxiuMV_op4X_ey-7h4iNg/exec';
-export const SAMPLES_URL = 'https://script.google.com/macros/s/AKfycbwHPMP6i9NcDOZCR7xL7eEdJZXho8Ju0BWs0H7RVLKJmMs1h4JqJ7r3qRpHP-3iyAU/exec';
-export const DIWALI_URL = 'https://script.google.com/macros/s/AKfycbwWOXAeQl5-KCG90vYob0uoCRA10QGq9qE9lPzc12Te3wP__7mt9IEGdB8g1gxFC0xF/exec';
-// Old multi-tab sheet (Mails / Ads / InMails / CCBD / Pending_*)
-export const LEGACY_URL = 'https://script.google.com/macros/s/AKfycbzsb5FX-sds7Hv25Cd_crPLtJGqTDWaPDuNz10Z68UvaHjD_US5bLys6ncfkY_Wm1ibzA/exec';
-// Noor Database (mail-merge contact tracker); loops every tab in the sheet.
-export const NOOR_URL = 'https://script.google.com/macros/s/AKfycbxSHX1_69dPwbYqMgec7iKxQuXPCECRPCDg4cn5ePrxcQJNCkvom98tJGIQLTIKodcRtQ/exec';
+// Now reads from Google Sheets API ("Sample Data (Snackible+Dipsters)",
+// tab "Sample sheet"). The old Apps Script doGet() ignored the ?limit param
+// entirely and re-scanned all ~50K rows on every tier call; this endpoint
+// does one Sheets API read and applies the same header-row cutoff-date
+// filter server-side, honoring ?limit for the tiered loads below.
+export const SAMPLES_URL = '/api/sheets?source=samples';
+
+// These now read straight from Google Sheets API via our own serverless
+// functions (api/sheets.js) using a service-account credential — row counts
+// and/or column layouts verified to match the Apps Script output.
+export const DIWALI_URL = '/api/sheets?source=diwali';
+export const NOOR_URL = '/api/sheets?source=noor';
+export const BD_URL = '/api/sheets?source=bd'; // "Sheet1" + "Recurring clients" tabs confirmed
+// Also fixes the previously-broken Sales tab: parseSales falls back to a
+// "Sales_Log"-named key, which this source provides (222 rows, verified
+// identical to the old Apps Script Sales_Log tab).
+export const SHEET_URL = '/api/sheets?source=ops';
+
+// LEGACY_URL: CCBD_BAU/Festive/Diwali and Sales_Log/Ads_Log/InMails now come
+// from Sheets API (verified row-for-row against the old Apps Script output).
+// Master_Log and Pending_* stay on Apps Script: a raw Sheets API read returns
+// far MORE rows than Apps Script does (83,155 vs 24,024 for Master_Log;
+// 1,868 vs 105 for Pending_Delivery) — Apps Script is filtering stale/handled
+// rows server-side and that logic hasn't been found.
+export const LEGACY_URL = '/api/legacy';
 
 // Sample_sheet spans years (~7MB full read), so it's loaded small-to-large.
 export const SAMPLE_TIERS = [

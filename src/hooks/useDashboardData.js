@@ -36,7 +36,8 @@ function getJson(url, signal, { timeout, params = '' } = {}) {
   const abort = () => ctrl.abort();
   signal.addEventListener('abort', abort);
   const timer = timeout ? setTimeout(abort, timeout) : null;
-  return fetch(`${url}?t=${Date.now()}${params}`, { cache: 'no-store', redirect: 'follow', signal: ctrl.signal })
+  const sep = url.includes('?') ? '&' : '?';
+  return fetch(`${url}${sep}t=${Date.now()}${params}`, { cache: 'no-store', redirect: 'follow', signal: ctrl.signal })
     .then((r) => r.json())
     .finally(() => {
       clearTimeout(timer);
