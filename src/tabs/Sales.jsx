@@ -37,21 +37,21 @@ export default function Sales({ view, loading }) {
           <div style={{ marginTop: 4, display: 'flex', flexDirection: 'column', gap: 5 }}>
             {top5.length ? top5.map((s, i) => (
               <div key={i} style={{ display: 'flex', justifyContent: 'space-between', fontSize: 11, alignItems: 'center' }}>
-                <span style={{ color: '#fff' }} title={s.client || ''}>
+                <span style={{ color: 'var(--t)' }} title={s.client || ''}>
                   {s.client ? s.client.slice(0, 18) + (s.client.length > 18 ? '…' : '') : 'Unknown'}
                 </span>
                 <span style={{ color: 'var(--gr)', fontFamily: 'monospace', fontWeight: 600 }}>{fmt(s.amt)}</span>
               </div>
-            )) : <div style={{ color: '#555', fontSize: 11, textAlign: 'center', padding: '10px 0' }}>No orders</div>}
+            )) : <div style={{ color: 'var(--m2)', fontSize: 11, textAlign: 'center', padding: '10px 0' }}>No orders</div>}
           </div>
         </div>
       </MetricGrid>
       <div className="g2">
         <Card title="Revenue by POC">
-          <HBarChart labels={pocs.map((p) => p[0])} values={pocs.map((p) => p[1])} colors={['#22c55e', '#16a34a', '#15803d', '#166534']} vf={fmt} minHeight={180} />
+          <HBarChart labels={pocs.map((p) => p[0])} values={pocs.map((p) => p[1])} colors={['var(--gr)', '#16a34a', '#15803d', '#166534']} vf={fmt} minHeight={180} />
         </Card>
         <Card title="Daily Revenue">
-          <BarChart labels={week.labels} datasets={[{ label: 'Weekly Revenue', data: week.values, color: '#22c55e', vf: fmt }]} height={180} money />
+          <BarChart labels={week.labels} datasets={[{ label: 'Weekly Revenue', data: week.values, color: 'var(--gr)', vf: fmt }]} height={180} money />
         </Card>
       </div>
       <div className="g1">
@@ -62,12 +62,12 @@ export default function Sales({ view, loading }) {
           <Table head={['Ref', 'Date', 'Client', 'POC', 'Type', { label: 'Amount', style: { textAlign: 'right' } }]}>
             {rows.length ? rows.map((s, i) => (
               <tr key={i}>
-                <td style={{ fontFamily: 'monospace', color: '#a78bfa' }}>{s.ref}</td>
+                <td style={{ fontFamily: 'monospace', color: 'var(--ac2)' }}>{s.ref}</td>
                 <td>{fd(s.date)}</td>
-                <td style={{ color: '#fff' }}>{s.client}</td>
+                <td style={{ color: 'var(--t)' }}>{s.client}</td>
                 <td><Badge kind="poc">{s.poc}</Badge></td>
-                <td style={{ color: '#888' }}>{s.type}</td>
-                <td style={{ textAlign: 'right', fontFamily: 'monospace', color: '#22c55e', fontWeight: 600 }}>{fmt(s.amt)}</td>
+                <td style={{ color: 'var(--m)' }}>{s.type}</td>
+                <td style={{ textAlign: 'right', fontFamily: 'monospace', color: 'var(--gr)', fontWeight: 600 }}>{fmt(s.amt)}</td>
               </tr>
             )) : <EmptyRow cols={6}>No orders in selected range</EmptyRow>}
           </Table>

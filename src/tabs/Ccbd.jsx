@@ -50,12 +50,12 @@ function Inbound({ data, from, to }) {
       </FilterRow>
       <div className="g2">
         <Card title="Leads by Date">
-          <BarChart labels={byDate.labels} datasets={[{ label: 'Leads', data: byDate.values, color: '#3b82f6', vf: (v) => v }]} height={180} />
+          <BarChart labels={byDate.labels} datasets={[{ label: 'Leads', data: byDate.values, color: 'var(--bl)', vf: (v) => v }]} height={180} />
         </Card>
         <Card title="Leads by City">
           <HBarChart
             labels={top8.map((c) => c[0].slice(0, 20))} values={top8.map((c) => c[1])}
-            colors={['#3b82f6', '#6d28d9', '#5b21b6', '#4c1d95', '#1d4ed8', '#1e40af', '#1e3a8a', '#0ea5e9']} minHeight={180}
+            colors={['var(--bl)', '#6d28d9', '#5b21b6', '#4c1d95', '#1d4ed8', '#1e40af', '#1e3a8a', '#0ea5e9']} minHeight={180}
           />
         </Card>
       </div>
@@ -66,17 +66,17 @@ function Inbound({ data, from, to }) {
               const cl = r.conversion.toLowerCase();
               return (
                 <tr key={i}>
-                  <td style={{ color: '#888' }}>{r.sr}</td>
+                  <td style={{ color: 'var(--m)' }}>{r.sr}</td>
                   <td>{fd(r.date)}</td>
-                  <td style={{ color: '#fff' }}>{r.name}</td>
-                  <td style={{ fontFamily: 'monospace', color: '#a78bfa' }}>{r.phone}</td>
+                  <td style={{ color: 'var(--t)' }}>{r.name}</td>
+                  <td style={{ fontFamily: 'monospace', color: 'var(--ac2)' }}>{r.phone}</td>
                   <td>{r.city}</td>
-                  <td title={r.remarks} style={{ color: '#aaa', maxWidth: 200, whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>{r.remarks}</td>
+                  <td title={r.remarks} style={{ color: 'var(--m)', maxWidth: 200, whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>{r.remarks}</td>
                   <td>{r.urgency.toLowerCase() === 'urgent' ? <Badge kind="urgent">Urgent</Badge> : <Badge kind="cold">{r.urgency || '—'}</Badge>}</td>
                   <td>
                     {cl === 'yes' || cl === 'converted' ? <Badge kind="yes">Yes</Badge>
                       : cl === 'no' ? <Badge kind="no">No</Badge>
-                        : <span style={{ color: '#888' }}>{r.conversion || '—'}</span>}
+                        : <span style={{ color: 'var(--m)' }}>{r.conversion || '—'}</span>}
                   </td>
                   <td>{r.poc ? <Badge kind="poc">{r.poc}</Badge> : '—'}</td>
                 </tr>
@@ -105,10 +105,10 @@ function Festive({ data, from, to }) {
       </MetricGrid>
       <div className="g2">
         <Card title="Festive Leads by Date">
-          <BarChart labels={byDate.labels} datasets={[{ label: 'Leads', data: byDate.values, color: '#f97316', vf: (v) => v }]} height={180} />
+          <BarChart labels={byDate.labels} datasets={[{ label: 'Leads', data: byDate.values, color: 'var(--or)', vf: (v) => v }]} height={180} />
         </Card>
         <Card title="Leads by Platform">
-          <HBarChart labels={platforms.map((p) => p[0])} values={platforms.map((p) => p[1])} colors={['#f97316', '#3b82f6', '#7c3aed', '#22c55e', '#eab308']} minHeight={180} />
+          <HBarChart labels={platforms.map((p) => p[0])} values={platforms.map((p) => p[1])} colors={['var(--or)', 'var(--bl)', 'var(--ac)', 'var(--gr)', 'var(--ye)']} minHeight={180} />
         </Card>
       </div>
     </>

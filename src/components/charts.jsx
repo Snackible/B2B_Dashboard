@@ -17,7 +17,7 @@ function useWidth(fallback) {
 }
 
 const NoData = ({ children }) => (
-  <p style={{ color: '#555', padding: 20, fontSize: 12, textAlign: 'center' }}>{children}</p>
+  <p style={{ color: 'var(--m2)', padding: 20, fontSize: 12, textAlign: 'center' }}>{children}</p>
 );
 
 /**
@@ -49,8 +49,8 @@ export function BarChart({ labels, datasets, height = 200, money = false }) {
         const y = P.t + cH - (i / 4) * cH, v = (maxV * i) / 4;
         return (
           <g key={i}>
-            <line x1={P.l} y1={y | 0} x2={P.l + cW} y2={y | 0} stroke="rgba(255,255,255,.06)" strokeWidth="1" />
-            <text x={P.l - 4} y={(y + 4) | 0} textAnchor="end" fill="#777" fontSize="9" fontFamily="system-ui">
+            <line x1={P.l} y1={y | 0} x2={P.l + cW} y2={y | 0} stroke="var(--b2)" strokeWidth="1" />
+            <text x={P.l - 4} y={(y + 4) | 0} textAnchor="end" fill="var(--m2)" fontSize="9" fontFamily="system-ui">
               {datasets[0]?.yf ? datasets[0].yf(v) : axisFmt(v)}
             </text>
           </g>
@@ -71,11 +71,11 @@ export function BarChart({ labels, datasets, height = 200, money = false }) {
         if (i % labelStep !== 0 && i !== labels.length - 1) return null;
         const x = (P.l + i * (cW / labels.length) + cW / labels.length / 2) | 0, ty = height - 8;
         return (
-          <text key={i} x={x} y={ty} textAnchor="end" fill="#aaa" fontSize="9" fontFamily="system-ui" transform={`rotate(-45,${x},${ty})`}>{lbl}</text>
+          <text key={i} x={x} y={ty} textAnchor="end" fill="var(--m)" fontSize="9" fontFamily="system-ui" transform={`rotate(-45,${x},${ty})`}>{lbl}</text>
         );
       })}
-      <line x1={P.l} y1={P.t} x2={P.l} y2={P.t + cH} stroke="#333" strokeWidth="1" />
-      <line x1={P.l} y1={P.t + cH} x2={P.l + cW} y2={P.t + cH} stroke="#333" strokeWidth="1" />
+      <line x1={P.l} y1={P.t} x2={P.l} y2={P.t + cH} stroke="var(--m2)" strokeWidth="1" />
+      <line x1={P.l} y1={P.t + cH} x2={P.l + cW} y2={P.t + cH} stroke="var(--m2)" strokeWidth="1" />
     </svg>,
   );
 }
@@ -104,12 +104,12 @@ export function HBarChart({ labels, values, colors, vf, minHeight }) {
         const tv = vf ? vf(values[i]) : '' + Math.round(values[i]);
         return (
           <g key={i}>
-            <text x={P.l - 7} y={y + ROW_H / 2 + 4} textAnchor="end" fill="#aaa" fontSize="10" fontFamily="system-ui">
+            <text x={P.l - 7} y={y + ROW_H / 2 + 4} textAnchor="end" fill="var(--m)" fontSize="10" fontFamily="system-ui">
               <title>{lbl}</title>{trunc(lbl)}
             </text>
             <rect x={P.l} y={y + 5} width={Math.max(bw, 3)} height={ROW_H - 12} fill={palette[i % palette.length]} rx="3" opacity=".85"
               style={{ cursor: 'pointer' }} onMouseEnter={(e) => show(e, `${lbl}: ${tv}`)} onMouseLeave={hide} />
-            <text x={P.l + bw + 7} y={y + ROW_H / 2 + 4} fill="#ccc" fontSize="10" fontFamily="system-ui">{tv}</text>
+            <text x={P.l + bw + 7} y={y + ROW_H / 2 + 4} fill="var(--t2)" fontSize="10" fontFamily="system-ui">{tv}</text>
           </g>
         );
       })}

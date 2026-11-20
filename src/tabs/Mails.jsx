@@ -7,10 +7,10 @@ import { MONTH_NAMES, fd, getWeekMonday, pct, pctDec, sumBy, weekLabel } from '.
 import { combinedByDate, yearsIn } from '../lib/selectors';
 
 const EVENTS = [
-  { id: 'del', label: 'Delivered', color: '#3b82f6' },
-  { id: 'open', label: 'Opened', color: '#7c3aed' },
-  { id: 'click', label: 'Clicked', color: '#f97316' },
-  { id: 'resp', label: 'Responded', color: '#22c55e' },
+  { id: 'del', label: 'Delivered', color: 'var(--bl)' },
+  { id: 'open', label: 'Opened', color: 'var(--ac)' },
+  { id: 'click', label: 'Clicked', color: 'var(--or)' },
+  { id: 'resp', label: 'Responded', color: 'var(--gr)' },
 ];
 const EVENT_OPTIONS = [['all', 'All Events'], ...EVENTS.map((e) => [e.id, e.label])];
 const TYPE_BUTTONS = [['all', 'All Mails'], ['primary', '🟢 Primary'], ['followup', '🔄 Follow-ups']];
@@ -93,7 +93,7 @@ export default function Mails({ data, view, mail, loading }) {
         <Card title="Open Rate by Industry">
           <HBarChart
             labels={ind.map((m) => m.ind)} values={ind.map((m) => +pct(m.open, m.del).replace('%', ''))}
-            colors={['#7c3aed', '#6d28d9', '#5b21b6', '#4c1d95']} vf={(v) => v + '% open'} minHeight={240}
+            colors={['var(--ac)', '#6d28d9', '#5b21b6', '#4c1d95']} vf={(v) => v + '% open'} minHeight={240}
           />
         </Card>
       </div>
@@ -102,14 +102,14 @@ export default function Mails({ data, view, mail, loading }) {
           <div className="mrow mhdr"><span>Industry</span><span>Delivered</span><span>Opened</span><span>Clicked</span><span>Responded</span></div>
           {ind.map((m) => (
             <div className="mrow" key={m.ind}>
-              <span style={{ color: '#eee' }}>{m.ind}</span>
+              <span style={{ color: 'var(--t2)' }}>{m.ind}</span>
               <span>{m.del.toLocaleString()}</span>
               <span>{rateCell(m.open, m.del)}</span>
               <span>{rateCell(m.click, m.del)}</span>
               <span>{rateCell(m.resp, m.del)}</span>
             </div>
           ))}
-          <div className="mrow" style={{ fontWeight: 600, color: '#fff', borderTop: '1px solid var(--b)', marginTop: 6, paddingTop: 10 }}>
+          <div className="mrow" style={{ fontWeight: 600, color: 'var(--t)', borderTop: '1px solid var(--b)', marginTop: 6, paddingTop: 10 }}>
             <span>TOTAL</span>
             <span>{tot('del').toLocaleString()}</span>
             <span>{rateCell(tot('open'), tot('del'))}</span>

@@ -36,9 +36,9 @@ export default function Overview({ view, loading, ready }) {
   ].filter((e) => e[1] > 0);
 
   const funnel = [
-    { label: 'Opened', n: open, color: '#7c3aed', cardColor: 'var(--ac2)' },
-    { label: 'Clicked', n: click, color: '#f97316', cardColor: 'var(--or)' },
-    { label: 'Responded', n: resp, color: '#22c55e', cardColor: 'var(--gr)' },
+    { label: 'Opened', n: open, color: 'var(--ac)', cardColor: 'var(--ac2)' },
+    { label: 'Clicked', n: click, color: 'var(--or)', cardColor: 'var(--or)' },
+    { label: 'Responded', n: resp, color: 'var(--gr)', cardColor: 'var(--gr)' },
   ];
 
   return (
@@ -62,10 +62,10 @@ export default function Overview({ view, loading, ready }) {
           </div>
           <div className="frow">
             <span className="flbl">Delivered</span>
-            <div className="fwrap"><div className="fbar" style={{ width: '100%', background: '#3b82f6' }}>{v(del.toLocaleString())}</div></div>
+            <div className="fwrap"><div className="fbar" style={{ width: '100%', background: 'var(--bl)' }}>{v(del.toLocaleString())}</div></div>
             <span className="fpct">100%</span>
           </div>
-          {[...funnel, { label: 'Bounced', n: bounce, color: '#ef4444' }].map((f) => (
+          {[...funnel, { label: 'Bounced', n: bounce, color: 'var(--re)' }].map((f) => (
             <div className="frow" key={f.label}>
               <span className="flbl">{f.label}</span>
               <div className="fwrap">
@@ -76,18 +76,18 @@ export default function Overview({ view, loading, ready }) {
           ))}
         </Card>
         <Card title="Sales by Date (₹)">
-          <BarChart labels={week.labels} datasets={[{ label: 'Weekly Sales', data: week.values, color: '#22c55e', vf: fmt }]} height={220} money />
+          <BarChart labels={week.labels} datasets={[{ label: 'Weekly Sales', data: week.values, color: 'var(--gr)', vf: fmt }]} height={220} money />
         </Card>
       </div>
       <div className="g3">
         <Card title="Ads — Lead Source">
-          <HBarChart labels={types.map((t) => t[0])} values={types.map((t) => t[1])} colors={['#3b82f6', '#7c3aed']} minHeight={160} />
+          <HBarChart labels={types.map((t) => t[0])} values={types.map((t) => t[1])} colors={['var(--bl)', 'var(--ac)']} minHeight={160} />
         </Card>
         <Card title="Ads — Conversion">
-          <HBarChart labels={conv.map((t) => t[0])} values={conv.map((t) => t[1])} colors={['#22c55e', '#ef4444', '#888']} minHeight={160} />
+          <HBarChart labels={conv.map((t) => t[0])} values={conv.map((t) => t[1])} colors={['var(--gr)', 'var(--re)', 'var(--m)']} minHeight={160} />
         </Card>
         <Card title="Sales by POC">
-          <HBarChart labels={pocs.map((p) => p[0])} values={pocs.map((p) => p[1])} colors={['#a78bfa', '#7c3aed', '#6d28d9', '#5b21b6']} vf={fmt} minHeight={160} />
+          <HBarChart labels={pocs.map((p) => p[0])} values={pocs.map((p) => p[1])} colors={['var(--ac2)', 'var(--ac)', '#6d28d9', '#5b21b6']} vf={fmt} minHeight={160} />
         </Card>
       </div>
     </>

@@ -29,7 +29,7 @@ export const Tierbar = ({ show = true, children }) => show && (
 );
 
 export const EmptyRow = ({ cols, children }) => (
-  <tr><td colSpan={cols} style={{ textAlign: 'center', color: '#555', padding: 20 }}>{children}</td></tr>
+  <tr><td colSpan={cols} style={{ textAlign: 'center', color: 'var(--m2)', padding: 20 }}>{children}</td></tr>
 );
 
 export const Table = ({ head, children, maxHeight }) => {
@@ -41,7 +41,7 @@ export const Table = ({ head, children, maxHeight }) => {
       <tbody>{children}</tbody>
     </table>
   );
-  return maxHeight ? <div style={{ maxHeight, overflowY: 'auto' }}>{table}</div> : table;
+  return <div className="tbl-wrap" style={maxHeight ? { maxHeight, overflowY: 'auto' } : undefined}>{table}</div>;
 };
 
 /** <select className="di"> whose options are [value, label] pairs or plain strings. */
@@ -73,4 +73,24 @@ export const SubTabs = ({ tabs, value, onChange }) => (
       <button key={id} className={`qb${value === id ? ' on' : ''}`} onClick={() => onChange(id)}>{label}</button>
     ))}
   </div>
+);
+
+export const ThemeToggle = ({ theme, onToggle }) => (
+  <button
+    className="theme-toggle"
+    onClick={onToggle}
+    aria-label={theme === 'light' ? 'Switch to dark mode' : 'Switch to light mode'}
+    title={theme === 'light' ? 'Switch to dark mode' : 'Switch to light mode'}
+  >
+    {theme === 'light' ? (
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+        <circle cx="12" cy="12" r="4" />
+        <path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M4.93 19.07l1.41-1.41M17.66 6.34l1.41-1.41" />
+      </svg>
+    ) : (
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+        <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z" />
+      </svg>
+    )}
+  </button>
 );

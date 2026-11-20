@@ -4,7 +4,7 @@ import { Badge, Card, EmptyRow, Metric, MetricGrid, SubTabs, Table, Tierbar } fr
 import { coldCallStats } from '../lib/parsers';
 import { inRange, pct } from '../lib/util';
 
-const BAR_COLORS = ['var(--or)', 'var(--bl)', '#7c3aed', 'var(--gr)', '#eab308'];
+const BAR_COLORS = ['var(--or)', 'var(--bl)', 'var(--ac)', 'var(--gr)', 'var(--ye)'];
 
 function Overview({ data, from, to }) {
   const { linkedin, coldCalls, targets, email } = data.diwali;
@@ -36,7 +36,7 @@ function Overview({ data, from, to }) {
         <Metric cls="gn" label="Responses" value={resp.toLocaleString()} sub={`${pct(resp, sent)} avg response`} />
         <Metric cls="or" label="LinkedIn Leads" value={linkedin.length} sub={`${liSent} InMails sent`} />
         <Metric cls="ye" label="Cold Calls" value={coldCalls.length} sub={`${ccDone} connects`} />
-        <Metric label="Sample Targets" style={{ borderLeft: '3px solid #7c3aed' }} value={targets ? targets.length : '—'}
+        <Metric cls="pu" label="Sample Targets" value={targets ? targets.length : '—'}
           sub={targets ? `${tgtWithPoc} POCs found (${pct(tgtWithPoc, targets.length || 1)})` : '—'} />
       </MetricGrid>
       <div className="g2">
@@ -48,7 +48,7 @@ function Overview({ data, from, to }) {
                 <div className="fbar" style={{ width: Math.max((m.totalSent / maxV) * 100, 2) + '%', background: BAR_COLORS[i % BAR_COLORS.length] }}>{m.totalSent.toLocaleString()}</div>
               </div>
             </div>
-          )) : <div style={{ color: '#555', fontSize: 11, textAlign: 'center', padding: 20 }}>No data</div>}
+          )) : <div style={{ color: 'var(--m2)', fontSize: 11, textAlign: 'center', padding: 20 }}>No data</div>}
         </Card>
         <Card title="Cold Call Outcomes (Jun 8)"><div /></Card>
       </div>
@@ -57,7 +57,7 @@ function Overview({ data, from, to }) {
           <Table head={['Industry', 'Delivered', 'Opened', 'Clicked', 'Responses', 'Rate']}>
             {sorted.length ? sorted.map((m) => (
               <tr key={m.industry}>
-                <td style={{ color: '#fff', fontWeight: 600 }}>{m.industry}</td>
+                <td style={{ color: 'var(--t)', fontWeight: 600 }}>{m.industry}</td>
                 <td>{m.totalSent.toLocaleString()}</td>
                 <td>{dash(m.opened || 0)}</td>
                 <td>{dash(m.clicked || 0)}</td>
@@ -94,8 +94,8 @@ function LinkedInCalls({ data }) {
           <Table maxHeight={500} head={['Name', 'Company', 'Position', 'InMail']}>
             {linkedin.length ? linkedin.map((l, i) => (
               <tr key={i}>
-                <td style={{ color: '#fff' }}>{l.name}</td>
-                <td style={{ color: '#a78bfa' }}>{l.company}</td>
+                <td style={{ color: 'var(--t)' }}>{l.name}</td>
+                <td style={{ color: 'var(--ac2)' }}>{l.company}</td>
                 <td>{l.position}</td>
                 <td><Badge kind={l.sent ? 'yes' : 'cold'}>{l.sent ? 'Sent' : 'Pending'}</Badge></td>
               </tr>
@@ -109,7 +109,7 @@ function LinkedInCalls({ data }) {
               const kind = s.includes('interested') && !s.includes('not') ? 'yes' : s.includes('not') ? 'no' : 'cold';
               return (
                 <tr key={i}>
-                  <td style={{ color: '#fff' }}>{c.company}</td>
+                  <td style={{ color: 'var(--t)' }}>{c.company}</td>
                   <td>{c.calledBy}</td>
                   <td>{c.followUp}</td>
                   <td><Badge kind={kind}>{c.status}</Badge></td>
@@ -143,24 +143,24 @@ function Targets({ data }) {
       </MetricGrid>
       <div className="g1">
         <Card title="Industry Distribution" right={<span style={{ fontSize: 11, color: 'var(--or)', background: 'rgba(249,115,22,0.1)', padding: '2px 8px', borderRadius: 10 }}>2026 Triggers mapped</span>}>
-          <HBarChart labels={indEntries.map((e) => e[0])} values={indEntries.map((e) => e[1])} colors={['#6b7280', '#3b82f6', '#f97316', '#22c55e', '#7c3aed', '#0ea5e9']} minHeight={180} />
+          <HBarChart labels={indEntries.map((e) => e[0])} values={indEntries.map((e) => e[1])} colors={['var(--m2)', 'var(--bl)', 'var(--or)', 'var(--gr)', 'var(--ac)', '#0ea5e9']} minHeight={180} />
         </Card>
       </div>
       <div className="g1">
         <Card title="Sample Box Targets — Full Pipeline (Top Tier)">
           <Table maxHeight={600} head={['#', 'Company', 'Industry', '2026 Trigger', 'POC', 'Contact', 'POC Status']}>
             {targets === null
-              ? <tr><td colSpan={7} style={{ textAlign: 'center', color: '#ef4444', padding: 20 }}>Data empty! API only sent these tabs: {tabKeys.join(', ') || 'None'}</td></tr>
+              ? <tr><td colSpan={7} style={{ textAlign: 'center', color: 'var(--re)', padding: 20 }}>Data empty! API only sent these tabs: {tabKeys.join(', ') || 'None'}</td></tr>
               : list.length ? list.map((t, i) => {
                 const status = t.hasPoc && t.hasContact ? 'Identified' : t.hasPoc ? 'No number' : 'No POC';
                 const kind = t.hasPoc && t.hasContact ? 'yes' : t.hasPoc ? 'warm' : 'no';
                 return (
                   <tr key={i}>
                     <td>{i + 1}</td>
-                    <td style={{ color: '#fff' }}>{t.company}</td>
+                    <td style={{ color: 'var(--t)' }}>{t.company}</td>
                     <td>{t.industry}</td>
                     <td>{t.trigger}</td>
-                    <td style={{ color: '#a78bfa' }}>{t.poc}</td>
+                    <td style={{ color: 'var(--ac2)' }}>{t.poc}</td>
                     <td>{t.contact}</td>
                     <td><Badge kind={kind}>{status}</Badge></td>
                   </tr>

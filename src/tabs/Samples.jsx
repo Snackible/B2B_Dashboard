@@ -19,9 +19,9 @@ const PRODUCTS = [
   ['Pistachio Dip with Biscuit sticks', 'Pistachio Dipsters'],
 ];
 const REQUESTERS = [['all', 'All'], 'Siya', 'Mahi', 'Bhoomika', 'Dhyana'];
-const BLUES = ['#3b82f6', '#6d28d9', '#5b21b6', '#4c1d95', '#1d4ed8', '#1e40af', '#1e3a8a'];
+const BLUES = ['var(--bl)', '#6d28d9', '#5b21b6', '#4c1d95', '#1d4ed8', '#1e40af', '#1e3a8a'];
 const rowStyle = { display: 'flex', justifyContent: 'space-between', fontSize: 12, padding: '7px 4px', borderBottom: '1px solid rgba(255,255,255,.04)' };
-const emptyStyle = { color: '#555', fontSize: 12, textAlign: 'center', padding: 20 };
+const emptyStyle = { color: 'var(--m2)', fontSize: 12, textAlign: 'center', padding: 20 };
 const top = (obj) => Object.entries(obj).sort((a, b) => b[1] - a[1]);
 
 export default function Samples({ data, filters, tierLabel }) {
@@ -105,7 +105,7 @@ export default function Samples({ data, filters, tierLabel }) {
       </FilterRow>
       <div className="g2">
         <Card title="Samples by Date">
-          <BarChart labels={chart.labels} datasets={[{ label: 'Items', data: chart.values, color: '#3b82f6', vf: (v) => v }]} height={180} />
+          <BarChart labels={chart.labels} datasets={[{ label: 'Items', data: chart.values, color: 'var(--bl)', vf: (v) => v }]} height={180} />
         </Card>
         <Card title="Top Products Sampled">
           <HBarChart labels={p7.map((p) => p[0].slice(0, 22))} values={p7.map((p) => p[1])} colors={BLUES} minHeight={180} />
@@ -116,8 +116,8 @@ export default function Samples({ data, filters, tierLabel }) {
           <div style={{ maxHeight: 280, overflowY: 'auto' }}>
             {clients.length ? clients.map(([name, n]) => (
               <div key={name} style={rowStyle}>
-                <span style={{ color: '#fff' }}>{name}</span>
-                <span style={{ color: '#a78bfa', fontFamily: 'monospace' }}>{n} req{n !== 1 ? 's' : ''}</span>
+                <span style={{ color: 'var(--t)' }}>{name}</span>
+                <span style={{ color: 'var(--ac2)', fontFamily: 'monospace' }}>{n} req{n !== 1 ? 's' : ''}</span>
               </div>
             )) : <div style={emptyStyle}>No clients in range</div>}
           </div>
@@ -128,9 +128,9 @@ export default function Samples({ data, filters, tierLabel }) {
               const ellipsis = { overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' };
               return (
                 <div key={i} style={{ ...rowStyle, gap: 8 }}>
-                  <span title={s.product || ''} style={{ color: '#fff', maxWidth: '50%', ...ellipsis }}>{s.product || '—'}</span>
-                  <span style={{ color: '#ddd', maxWidth: '30%', ...ellipsis }}>{s.client || '—'}</span>
-                  <span style={{ color: '#a78bfa', fontFamily: 'monospace', flexShrink: 0 }}>x{s.qty || 1}</span>
+                  <span title={s.product || ''} style={{ color: 'var(--t)', maxWidth: '50%', ...ellipsis }}>{s.product || '—'}</span>
+                  <span style={{ color: 'var(--t2)', maxWidth: '30%', ...ellipsis }}>{s.client || '—'}</span>
+                  <span style={{ color: 'var(--ac2)', fontFamily: 'monospace', flexShrink: 0 }}>x{s.qty || 1}</span>
                 </div>
               );
             }) : <div style={emptyStyle}>No samples sent today</div>}
@@ -145,11 +145,11 @@ export default function Samples({ data, filters, tierLabel }) {
               return (
                 <tr key={i}>
                   <td style={top}>{fd(g.date)}</td>
-                  <td style={{ color: '#fff', lineHeight: 1.6, ...top }}>{g.products.map((p, j) => <div key={j}>• {p}</div>)}</td>
-                  <td style={{ color: '#ddd', ...top }}>{g.client || '—'}</td>
-                  <td style={{ fontFamily: 'monospace', color: '#a78bfa', fontWeight: 600, ...top }}>{g.totalQty}</td>
+                  <td style={{ color: 'var(--t)', lineHeight: 1.6, ...top }}>{g.products.map((p, j) => <div key={j}>• {p}</div>)}</td>
+                  <td style={{ color: 'var(--t2)', ...top }}>{g.client || '—'}</td>
+                  <td style={{ fontFamily: 'monospace', color: 'var(--ac2)', fontWeight: 600, ...top }}>{g.totalQty}</td>
                   <td style={top}><Badge kind="poc">{g.req_by}</Badge></td>
-                  <td style={{ color: '#aaa', ...top }}>—</td>
+                  <td style={{ color: 'var(--m)', ...top }}>—</td>
                 </tr>
               );
             }) : <EmptyRow cols={6}>No samples in selected range</EmptyRow>}

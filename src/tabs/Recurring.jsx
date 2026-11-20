@@ -34,7 +34,7 @@ export default function Recurring({ data, loading }) {
                   <td>{r.phone}</td>
                   <td>{r.location}</td>
                   <td style={{ textAlign: 'center', fontWeight: 600 }}>{r.orders}</td>
-                  <td style={{ fontFamily: 'monospace', color: '#a78bfa', fontSize: 11 }}>{r.dates}</td>
+                  <td style={{ fontFamily: 'monospace', color: 'var(--ac2)', fontSize: 11 }}>{r.dates}</td>
                   <td style={{ textAlign: 'right', color: 'var(--gr)', fontFamily: 'monospace' }}>{rev ? fmt(rev) : '—'}</td>
                 </tr>
               );

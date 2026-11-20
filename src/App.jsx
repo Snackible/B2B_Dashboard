@@ -1,7 +1,7 @@
-import { useMemo, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { TooltipProvider } from './components/Tooltip';
 import { FlashProvider, useFlashState } from './components/Flash';
-import { Metric, MetricGrid } from './components/ui';
+import { Metric, MetricGrid, ThemeToggle } from './components/ui';
 import { useDashboardData } from './hooks/useDashboardData';
 import { deriveView } from './lib/selectors';
 import { fmt, pct, pctDec, sumBy, todayStr } from './lib/util';
@@ -31,6 +31,15 @@ function rangeDates(key) {
 export default function App() {
   const { data, status, lastUpdated, ready, isLoading, sampleTier } = useDashboardData();
   const [flashMsg, flash] = useFlashState();
+
+  const [theme, setTheme] = useState(() => {
+    try { return localStorage.getItem('theme') === 'light' ? 'light' : 'dark'; } catch (e) { return 'dark'; }
+  });
+  useEffect(() => {
+    document.documentElement.setAttribute('data-theme', theme);
+    try { localStorage.setItem('theme', theme); } catch (e) { /* ignore */ }
+  }, [theme]);
+  const toggleTheme = () => setTheme((t) => (t === 'light' ? 'dark' : 'light'));
 
   const [tab, setTab] = useState('ov');
   const [range, setRange] = useState('all'); // null once a date input is edited by hand
@@ -82,9 +91,12 @@ export default function App() {
       <FlashProvider value={flash}>
         <div className="bar">
           <div className="logo">SNACKIBLE <em>/ B2B</em></div>
-          <div className="stl">
-            <div className={`dot${status.loading ? ' loading' : ''}`} />
-            <span>{flashMsg ?? status.text}</span>
+          <div className="bar-right">
+            <div className="stl">
+              <div className={`dot${status.loading ? ' loading' : ''}`} />
+              <span>{flashMsg ?? status.text}</span>
+            </div>
+            <ThemeToggle theme={theme} onToggle={toggleTheme} />
           </div>
         </div>
         <div className="wrap">
@@ -114,11 +126,13 @@ export default function App() {
               sub={v(`FM: ${data.inmails.filter((i) => i.ind === 'FM').length} · IT: ${data.inmails.filter((i) => i.ind === 'IT').length}`)} />
           </MetricGrid>
 
-          <div className="tabs">
-            {tabs.map(([id, label]) => (
-              <div key={id} className={`tab${tab === id ? ' on' : ''}`} onClick={() => setTab(id)}
-                style={id === 'diwali' ? { color: tab === id ? undefined : 'var(--or)', fontWeight: 600 } : undefined}>{label}</div>
-            ))}
+          <div className="tabs-wrap">
+            <div className="tabs">
+              {tabs.map(([id, label]) => (
+                <div key={id} className={`tab${tab === id ? ' on' : ''}`} onClick={() => setTab(id)}
+                  style={id === 'diwali' ? { color: tab === id ? undefined : 'var(--or)', fontWeight: 600 } : undefined}>{label}</div>
+              ))}
+            </div>
           </div>
 
           {/* Every pane stays mounted (just hidden) so per-tab filters survive tab switches. */}

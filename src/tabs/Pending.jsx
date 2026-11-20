@@ -6,7 +6,7 @@ import {
 import { PENDING_ALLOWED_POCS } from '../config';
 import { fd, inRange, todayStr, ymd } from '../lib/util';
 
-const BLUES = ['#3b82f6', '#6d28d9', '#5b21b6', '#4c1d95', '#1d4ed8', '#1e40af'];
+const BLUES = ['var(--bl)', '#6d28d9', '#5b21b6', '#4c1d95', '#1d4ed8', '#1e40af'];
 const ellipsis = { whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' };
 const companyOf = (s) => (s.company || s.client || '').trim();
 const daysAgo = (n) => { const d = new Date(); d.setDate(d.getDate() - n); return ymd(d); };
@@ -95,13 +95,13 @@ export function PendingSamples({ data, filters, loading }) {
       </div>
       <div className="g3">
         <Card title="Samples by Date">
-          <BarChart labels={dates.map(fd)} datasets={[{ label: 'Samples', data: dates.map((d) => byDate[d]), color: '#3b82f6', vf: (v) => v }]} height={180} />
+          <BarChart labels={dates.map(fd)} datasets={[{ label: 'Samples', data: dates.map((d) => byDate[d]), color: 'var(--bl)', vf: (v) => v }]} height={180} />
         </Card>
         <Card title="Top Products Sent">
           <HBarChart labels={p6.map((p) => p[0].slice(0, 24))} values={p6.map((p) => p[1])} colors={BLUES} vf={(v) => v + ' units'} minHeight={180} />
         </Card>
         <Card title="Samples by POC">
-          <HBarChart labels={pocs.map((p) => p[0])} values={pocs.map((p) => p[1])} colors={['#a78bfa', '#7c3aed', '#6d28d9', '#5b21b6']} minHeight={180} />
+          <HBarChart labels={pocs.map((p) => p[0])} values={pocs.map((p) => p[1])} colors={['var(--ac2)', 'var(--ac)', '#6d28d9', '#5b21b6']} minHeight={180} />
         </Card>
       </div>
       <div className="g1">
@@ -111,16 +111,16 @@ export function PendingSamples({ data, filters, loading }) {
               const bauRow = isBau(s);
               return (
                 <tr key={i}>
-                  <td style={{ fontFamily: 'monospace', color: '#a78bfa', fontSize: 11 }}>{s.ref || '—'}</td>
+                  <td style={{ fontFamily: 'monospace', color: 'var(--ac2)', fontSize: 11 }}>{s.ref || '—'}</td>
                   <td>{fd(s.date)}</td>
-                  <td style={{ color: '#fff', maxWidth: 200, ...ellipsis }}>{s.product || '—'}</td>
-                  <td style={{ color: '#aaa' }}>{s.grammage || '—'}</td>
-                  <td style={{ fontFamily: 'monospace', color: '#22c55e' }}>{s.qty || 1}</td>
-                  <td style={{ color: '#ddd' }}>{s.client || '—'}</td>
-                  <td style={{ color: '#ddd', maxWidth: 140, ...ellipsis }}>{companyOf(s) || '—'}</td>
+                  <td style={{ color: 'var(--t)', maxWidth: 200, ...ellipsis }}>{s.product || '—'}</td>
+                  <td style={{ color: 'var(--m)' }}>{s.grammage || '—'}</td>
+                  <td style={{ fontFamily: 'monospace', color: 'var(--gr)' }}>{s.qty || 1}</td>
+                  <td style={{ color: 'var(--t2)' }}>{s.client || '—'}</td>
+                  <td style={{ color: 'var(--t2)', maxWidth: 140, ...ellipsis }}>{companyOf(s) || '—'}</td>
                   <td><Badge kind="poc">{s.poc || '—'}</Badge></td>
                   <td><Badge kind={bauRow ? 'inbound' : 'yes'}>{bauRow ? 'BAU' : 'Unique'}</Badge></td>
-                  <td style={{ color: '#aaa' }}>{s.dispatch || '—'}</td>
+                  <td style={{ color: 'var(--m)' }}>{s.dispatch || '—'}</td>
                 </tr>
               );
             }) : <EmptyRow cols={10}>No pending samples in range</EmptyRow>}
@@ -142,14 +142,14 @@ export function PendingSales({ data, filters, loading }) {
           <Table head={['Ref No.', 'PO Date', 'Order Date', 'POC', 'Client', { label: 'Gross Sales', style: { textAlign: 'right' } }, 'POC Name', 'Contact']}>
             {rows.length ? rows.map((s, i) => (
               <tr key={i}>
-                <td style={{ fontFamily: 'monospace', color: '#a78bfa', fontSize: 11 }}>{s.ref || '—'}</td>
+                <td style={{ fontFamily: 'monospace', color: 'var(--ac2)', fontSize: 11 }}>{s.ref || '—'}</td>
                 <td>{fd(s.poDate)}</td>
                 <td>{fd(s.orderDate)}</td>
                 <td><Badge kind="poc">{s.poc || '—'}</Badge></td>
-                <td style={{ color: '#fff', maxWidth: 200, ...ellipsis }}>{s.client || '—'}</td>
-                <td style={{ textAlign: 'right', color: '#22c55e', fontFamily: 'monospace' }}>₹{Number(s.gross || 0).toLocaleString()}</td>
-                <td style={{ color: '#aaa' }}>{s.pocName || '—'}</td>
-                <td style={{ color: '#aaa', fontFamily: 'monospace' }}>{s.contact || '—'}</td>
+                <td style={{ color: 'var(--t)', maxWidth: 200, ...ellipsis }}>{s.client || '—'}</td>
+                <td style={{ textAlign: 'right', color: 'var(--gr)', fontFamily: 'monospace' }}>₹{Number(s.gross || 0).toLocaleString()}</td>
+                <td style={{ color: 'var(--m)' }}>{s.pocName || '—'}</td>
+                <td style={{ color: 'var(--m)', fontFamily: 'monospace' }}>{s.contact || '—'}</td>
               </tr>
             )) : <EmptyRow cols={8}>No sales orders in range</EmptyRow>}
           </Table>

@@ -22,12 +22,12 @@ export function Ads({ view, loading }) {
             {ads.length ? ads.map((a, i) => (
               <tr key={i}>
                 <td>{fd(a.date)}</td>
-                <td style={{ color: '#fff' }}>{a.client}</td>
+                <td style={{ color: 'var(--t)' }}>{a.client}</td>
                 <td><Badge kind={a.type.toLowerCase()}>{a.type}</Badge></td>
                 <td><Badge kind="poc">{a.poc}</Badge></td>
                 <td><Badge kind={a.lead.toLowerCase()}>{a.lead}</Badge></td>
                 <td><Badge kind={a.conv === 'Yes' ? 'yes' : a.conv === 'No' ? 'no' : ''}>{a.conv || '—'}</Badge></td>
-                <td style={{ textAlign: 'right', fontFamily: 'monospace', color: '#22c55e' }}>{a.val ? fmt(a.val) : '—'}</td>
+                <td style={{ textAlign: 'right', fontFamily: 'monospace', color: 'var(--gr)' }}>{a.val ? fmt(a.val) : '—'}</td>
               </tr>
             )) : <EmptyRow cols={7}>No leads in selected range</EmptyRow>}
           </Table>
@@ -52,11 +52,11 @@ export function InMails({ data, loading }) {
           <Table head={['#', 'Industry', 'Company', 'Role', 'Contact']}>
             {rows.length ? rows.map((m) => (
               <tr key={m.n}>
-                <td style={{ color: '#888' }}>{m.n}</td>
+                <td style={{ color: 'var(--m)' }}>{m.n}</td>
                 <td><Badge kind={m.ind === 'FM' ? 'inbound' : 'ccbd'}>{m.ind}</Badge></td>
-                <td style={{ color: '#fff' }}>{m.company}</td>
-                <td style={{ color: '#aaa' }}>{m.role}</td>
-                <td style={{ color: '#a78bfa' }}>{m.poc}</td>
+                <td style={{ color: 'var(--t)' }}>{m.company}</td>
+                <td style={{ color: 'var(--m)' }}>{m.role}</td>
+                <td style={{ color: 'var(--ac2)' }}>{m.poc}</td>
               </tr>
             )) : <EmptyRow cols={5}>No InMail data found in sheet</EmptyRow>}
           </Table>

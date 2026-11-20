@@ -5,7 +5,7 @@ import {
 } from '../components/ui';
 import { fd, inRange, lsGet, lsSet, pct } from '../lib/util';
 
-const PHASE_COLOR = { Cold: '#3b82f6', Hot: '#f97316', Converted: '#22c55e', Unknown: '#888' };
+const PHASE_COLOR = { Cold: 'var(--bl)', Hot: 'var(--or)', Converted: 'var(--gr)', Unknown: 'var(--m)' };
 const PHASES = ['Cold', 'Hot', 'Converted'];
 const PHASE_LABEL = { Cold: '❄️ Cold', Hot: '🔥 Hot', Converted: '✅ Converted' };
 const mdSlash = (d) => d.slice(5).replace('-', '/');
@@ -17,16 +17,16 @@ function LeadRow({ b }) {
   const convKey = 'conv_' + leadId(b), tickKey = 'tick_' + leadId(b);
   const [conv, setConv] = useState(() => lsGet(convKey) || '');
   const [tick, setTick] = useState(() => lsGet(tickKey) === 'true');
-  const col = PHASE_COLOR[b.phase] || '#888';
+  const col = PHASE_COLOR[b.phase] || 'var(--m)';
   const save = (key, value) => { lsSet(key, value); flash('selection saved locally'); };
 
   return (
     <tr>
       <td>{fd(b.date)}</td>
-      <td style={{ color: '#fff' }}>{b.company || '—'}</td>
-      <td style={{ color: '#ddd' }}>{b.name}</td>
+      <td style={{ color: 'var(--t)' }}>{b.company || '—'}</td>
+      <td style={{ color: 'var(--t2)' }}>{b.name}</td>
       <td><Badge kind="poc">{b.poc || '—'}</Badge></td>
-      <td style={{ color: '#aaa' }}>{b.source.trim() || '—'}</td>
+      <td style={{ color: 'var(--m)' }}>{b.source.trim() || '—'}</td>
       <td>
         <span style={{ display: 'inline-block', padding: '2px 8px', borderRadius: 4, fontSize: 10, fontWeight: 600, background: col + '22', color: col }}>{b.phase}</span>
       </td>
@@ -37,11 +37,11 @@ function LeadRow({ b }) {
         </select>
       </td>
       <td style={{ textAlign: 'center' }}>
-        <input type="checkbox" checked={tick} style={{ cursor: 'pointer', width: 16, height: 16, accentColor: '#22c55e' }}
+        <input type="checkbox" checked={tick} style={{ cursor: 'pointer', width: 16, height: 16, accentColor: 'var(--gr)' }}
           onChange={(e) => { setTick(e.target.checked); save(tickKey, String(e.target.checked)); }} />
       </td>
-      <td style={{ color: '#eab308', fontSize: 11 }}>{b.followup ? '⏰ ' + mdSlash(b.followup) : '—'}</td>
-      <td style={{ color: '#aaa', maxWidth: 200, whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>{b.remarks}</td>
+      <td style={{ color: 'var(--ye)', fontSize: 11 }}>{b.followup ? '⏰ ' + mdSlash(b.followup) : '—'}</td>
+      <td style={{ color: 'var(--m)', maxWidth: 200, whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>{b.remarks}</td>
     </tr>
   );
 }
@@ -49,19 +49,19 @@ function LeadRow({ b }) {
 function PipelineCard({ leads }) {
   return leads.length ? leads.map((b, i) => (
     <div key={i} style={{ background: 'var(--s2)', borderRadius: 8, padding: 10, marginBottom: 8 }}>
-      <div style={{ fontSize: 12, fontWeight: 600, color: '#fff', marginBottom: 3 }}>{b.company || b.name}</div>
-      {b.company && <div style={{ fontSize: 11, color: '#aaa', marginBottom: 3 }}>{b.name}</div>}
+      <div style={{ fontSize: 12, fontWeight: 600, color: 'var(--t)', marginBottom: 3 }}>{b.company || b.name}</div>
+      {b.company && <div style={{ fontSize: 11, color: 'var(--m)', marginBottom: 3 }}>{b.name}</div>}
       <div style={{ fontSize: 10, color: 'var(--m)', display: 'flex', gap: 8, flexWrap: 'wrap', marginTop: 4 }}>
         <span>📅 {mdSlash(b.date)}</span>
         {b.poc && <span>👤 {b.poc}</span>}
-        {b.source && <span style={{ background: 'rgba(124,58,237,.15)', color: '#a78bfa', padding: '1px 5px', borderRadius: 3 }}>{b.source.trim()}</span>}
+        {b.source && <span style={{ background: 'rgba(124,58,237,.15)', color: 'var(--ac2)', padding: '1px 5px', borderRadius: 3 }}>{b.source.trim()}</span>}
       </div>
       {b.remarks && (
-        <div style={{ fontSize: 10, color: '#aaa', marginTop: 5, paddingTop: 5, borderTop: '1px solid rgba(255,255,255,.05)' }}>
+        <div style={{ fontSize: 10, color: 'var(--m)', marginTop: 5, paddingTop: 5, borderTop: '1px solid rgba(255,255,255,.05)' }}>
           {b.remarks.slice(0, 60) + (b.remarks.length > 60 ? '…' : '')}
         </div>
       )}
-      {b.followup && <div style={{ fontSize: 10, color: '#eab308', marginTop: 3 }}>⏰ Follow-up: {mdSlash(b.followup)}</div>}
+      {b.followup && <div style={{ fontSize: 10, color: 'var(--ye)', marginTop: 3 }}>⏰ Follow-up: {mdSlash(b.followup)}</div>}
     </div>
   )) : <div style={{ color: 'var(--m)', fontSize: 12, textAlign: 'center', padding: 16 }}>No leads</div>;
 }
