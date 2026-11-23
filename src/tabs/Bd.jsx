@@ -53,27 +53,28 @@ function LeadRow({ b }) {
 }
 
 function PipelineCard({ leads }) {
-  return leads.length ? leads.map((b, i) => (
-    <div key={i} style={{ background: 'var(--s2)', borderRadius: 8, padding: '10px 10px 9px' }}>
-      <div style={{ fontSize: 12, fontWeight: 600, color: 'var(--t)', marginBottom: 3 }}>{b.company || b.name}</div>
-      {b.company && <div style={{ fontSize: 11, color: 'var(--m)', marginBottom: 3 }}>{b.name}</div>}
-      <div style={{ fontSize: 10, color: 'var(--m)', display: 'flex', gap: 8, flexWrap: 'wrap', alignItems: 'center', marginTop: 4 }}>
-        <span>{mdSlash(b.date)}</span>
-        {b.poc && <span>{b.poc}</span>}
-        {b.source && <span style={{ background: 'rgba(124,58,237,.15)', color: 'var(--ac2)', padding: '1px 5px', borderRadius: 3 }}>{b.source.trim()}</span>}
+  if (!leads.length) return <div className="nd">No leads</div>;
+  return (
+    <div className="leadcol">
+      <div className="lead-stack">
+        {leads.map((b, i) => (
+          <div key={i} className="lead-card">
+            <div className="lead-top">
+              <span className="lead-name">{b.company || b.name}</span>
+              {b.followup && <span className="lead-followup">Follow-up {mdSlash(b.followup)}</span>}
+            </div>
+            {b.company && <div className="lead-contact">{b.name}</div>}
+            <div className="lead-meta">
+              <span>{mdSlash(b.date)}</span>
+              {b.poc && <><span className="sep">·</span><span>{b.poc}</span></>}
+              {b.source && <span className="lead-chip">{b.source.trim()}</span>}
+            </div>
+            {b.remarks && <div className="lead-remarks">{b.remarks}</div>}
+          </div>
+        ))}
       </div>
-      {b.remarks && (
-        <div style={{ fontSize: 10, color: 'var(--m)', marginTop: 6, paddingTop: 6, borderTop: '1px solid var(--b2)' }}>
-          {b.remarks.slice(0, 60) + (b.remarks.length > 60 ? '…' : '')}
-        </div>
-      )}
-      {b.followup && (
-        <div style={{ fontSize: 10, color: 'var(--ye)', marginTop: 6, paddingTop: 6, borderTop: '1px solid var(--b2)' }}>
-          Follow-up {mdSlash(b.followup)}
-        </div>
-      )}
     </div>
-  )) : <div style={{ color: 'var(--m)', fontSize: 12, textAlign: 'center', padding: 16 }}>No leads</div>;
+  );
 }
 
 export default function Bd({ data, filters, loading }) {
