@@ -127,9 +127,18 @@ export default function App() {
           </MetricGrid>
 
           <div className="tabs-wrap">
-            <div className="tabs" role="tablist">
+            <div className="tabs" role="tablist" aria-label="Dashboard sections" onKeyDown={(e) => {
+              if (e.key !== 'ArrowRight' && e.key !== 'ArrowLeft') return;
+              e.preventDefault();
+              const ids = tabs.map((t) => t[0]);
+              const i = ids.indexOf(tab);
+              const next = e.key === 'ArrowRight' ? (i + 1) % ids.length : (i - 1 + ids.length) % ids.length;
+              setTab(ids[next]);
+              requestAnimationFrame(() => document.getElementById(`tab-${ids[next]}`)?.focus());
+            }}>
               {tabs.map(([id, label]) => (
                 <button key={id} type="button" role="tab" id={`tab-${id}`} aria-selected={tab === id} aria-controls={`panel-${id}`}
+                  tabIndex={tab === id ? 0 : -1}
                   className={`tab${tab === id ? ' on' : ''}${id === 'diwali' ? ' tab-or' : ''}`} onClick={() => setTab(id)}>
                   {label}
                 </button>
