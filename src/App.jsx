@@ -118,12 +118,12 @@ export default function App() {
           </div>
 
           <MetricGrid>
-            <Metric cls="gn" label="Total B2B Sales" value={v(fmt(sales.reduce((a, s) => a + s.amt, 0)))} sub={v(`${sales.length} orders`)} />
-            <Metric cls="bl" label="Emails Delivered" value={v(del.toLocaleString())} sub={v(`${pctDec(open, del)} open rate`)} />
-            <Metric cls="or" label="Email Responses" value={v(resp)} sub={v(`${pctDec(resp, del)} response rate`)} />
-            <Metric cls="ye" label="Ads Leads" value={v(ads.length)} sub={v(`${converted} converted · ${pct(converted, ads.length || 1)}`)} />
+            <Metric cls="gn" label="Total B2B Sales" value={v(fmt(sales.reduce((a, s) => a + s.amt, 0)))} sub={v(`${sales.length} orders`)} onClick={() => setTab('sales')} />
+            <Metric cls="bl" label="Emails Delivered" value={v(del.toLocaleString())} sub={v(`${pctDec(open, del)} open rate`)} onClick={() => setTab('mails')} />
+            <Metric cls="or" label="Email Responses" value={v(resp)} sub={v(`${pctDec(resp, del)} response rate`)} onClick={() => setTab('mails')} />
+            <Metric cls="ye" label="Ads Leads" value={v(ads.length)} sub={v(`${converted} converted · ${pct(converted, ads.length || 1)}`)} onClick={() => setTab('ads')} />
             <Metric label="InMails Sent" value={v(data.inmails.length)}
-              sub={v(`FM: ${data.inmails.filter((i) => i.ind === 'FM').length} · IT: ${data.inmails.filter((i) => i.ind === 'IT').length}`)} />
+              sub={v(`FM: ${data.inmails.filter((i) => i.ind === 'FM').length} · IT: ${data.inmails.filter((i) => i.ind === 'IT').length}`)} onClick={() => setTab('inmails')} />
           </MetricGrid>
 
           <div className="tabs-wrap">

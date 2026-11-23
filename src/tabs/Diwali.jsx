@@ -25,7 +25,7 @@ function Overview({ data, from, to }) {
   const resp = email.reduce((a, m) => a + m.responses, 0); // responses always come from the tracker
   const maxV = sorted.length ? sorted[0].totalSent : 1;
   const liSent = linkedin.filter((l) => l.sent).length;
-  const ccDone = coldCallStats(coldCalls).done;
+  const cc = coldCallStats(coldCalls);
   const tgtWithPoc = targets ? targets.filter((t) => t.hasPoc).length : 0;
   const dash = (v) => v > 0 ? v.toLocaleString() : '—';
 
@@ -35,7 +35,7 @@ function Overview({ data, from, to }) {
         <Metric cls="bl" label="Emails Sent" value={sent.toLocaleString()} sub="Diwali Campaign" />
         <Metric cls="gn" label="Responses" value={resp.toLocaleString()} sub={`${pct(resp, sent)} avg response`} />
         <Metric cls="or" label="LinkedIn Leads" value={linkedin.length} sub={`${liSent} InMails sent`} />
-        <Metric cls="ye" label="Cold Calls" value={coldCalls.length} sub={`${ccDone} connects`} />
+        <Metric cls="ye" label="Cold Calls" value={coldCalls.length} sub={`${cc.done} connects`} />
         <Metric cls="pu" label="Sample Targets" value={targets ? targets.length : '—'}
           sub={targets ? `${tgtWithPoc} POCs found (${pct(tgtWithPoc, targets.length || 1)})` : '—'} />
       </MetricGrid>
@@ -50,19 +50,33 @@ function Overview({ data, from, to }) {
             </div>
           )) : <div style={{ color: 'var(--m2)', fontSize: 11, textAlign: 'center', padding: 20 }}>No data</div>}
         </Card>
-        <Card title="Cold Call Outcomes (Jun 8)"><div /></Card>
+        <Card title="Cold Call Outcomes (Jun 8)">
+          {coldCalls.length ? (
+            <HBarChart
+              labels={['Positive', 'Not Interested', 'Follow-up', 'Pending']}
+              values={[cc.pos, cc.no, cc.fu, Math.max(coldCalls.length - cc.pos - cc.no - cc.fu, 0)]}
+              colors={['var(--gr)', 'var(--re)', 'var(--or)', 'var(--m2)']}
+              minHeight={150}
+            />
+          ) : <div className="nd">No cold call data</div>}
+        </Card>
       </div>
       <div className="g1">
         <Card title="Diwali Email Tracker">
-          <Table head={['Industry', 'Delivered', 'Opened', 'Clicked', 'Responses', 'Rate']}>
+          <Table head={['Industry',
+            { label: 'Delivered', style: { textAlign: 'right' } },
+            { label: 'Opened', style: { textAlign: 'right' } },
+            { label: 'Clicked', style: { textAlign: 'right' } },
+            { label: 'Responses', style: { textAlign: 'right' } },
+            { label: 'Rate', style: { textAlign: 'right' } }]}>
             {sorted.length ? sorted.map((m) => (
               <tr key={m.industry}>
                 <td style={{ color: 'var(--t)', fontWeight: 600 }}>{m.industry}</td>
-                <td>{m.totalSent.toLocaleString()}</td>
-                <td>{dash(m.opened || 0)}</td>
-                <td>{dash(m.clicked || 0)}</td>
-                <td>{dash(m.responses || 0)}</td>
-                <td><Badge kind="warm">{pct(m.responses || 0, m.totalSent)}</Badge></td>
+                <td style={{ textAlign: 'right' }}>{m.totalSent.toLocaleString()}</td>
+                <td style={{ textAlign: 'right' }}>{dash(m.opened || 0)}</td>
+                <td style={{ textAlign: 'right' }}>{dash(m.clicked || 0)}</td>
+                <td style={{ textAlign: 'right' }}>{dash(m.responses || 0)}</td>
+                <td style={{ textAlign: 'right', color: 'var(--t2)', fontWeight: 600 }}>{pct(m.responses || 0, m.totalSent)}</td>
               </tr>
             )) : <EmptyRow cols={6}>No Diwali Email Tracker data found</EmptyRow>}
           </Table>

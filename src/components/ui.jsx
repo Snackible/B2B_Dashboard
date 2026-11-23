@@ -1,10 +1,25 @@
-export const Metric = ({ cls = '', label, value, sub, valueStyle, style }) => (
-  <div className={`mc ${cls}`.trim()} style={style}>
-    <div className="ml">{label}</div>
-    <div className="mv" style={valueStyle}>{value}</div>
-    {sub !== undefined && <div className="ms">{sub}</div>}
-  </div>
-);
+export const Metric = ({ cls = '', label, value, sub, valueStyle, style, onClick }) => {
+  const clickable = typeof onClick === 'function';
+  return (
+    <div
+      className={`mc ${cls}${clickable ? ' mc-link' : ''}`.trim()}
+      style={style}
+      onClick={onClick}
+      role={clickable ? 'button' : undefined}
+      tabIndex={clickable ? 0 : undefined}
+      onKeyDown={clickable ? (e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); onClick(e); } } : undefined}
+    >
+      <div className="ml">{label}</div>
+      <div className="mv" style={valueStyle}>{value}</div>
+      {sub !== undefined && <div className="ms">{sub}</div>}
+      {clickable && (
+        <svg className="mc-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+          <path d="M7 17L17 7M17 7H8M17 7v9" />
+        </svg>
+      )}
+    </div>
+  );
+};
 
 export const MetricGrid = ({ cols, children, style }) => (
   <div className="mg" style={{ gridTemplateColumns: cols ? `repeat(${cols},1fr)` : undefined, ...style }}>{children}</div>

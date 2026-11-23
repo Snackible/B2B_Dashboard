@@ -81,7 +81,7 @@ export function BarChart({ labels, datasets, height = 200, money = false }) {
         const y = P.t + cH - (i / 4) * cH, v = (maxV * i) / 4;
         return (
           <g key={i}>
-            <line x1={P.l} y1={y | 0} x2={P.l + cW} y2={y | 0} stroke="var(--b2)" strokeWidth="1" strokeDasharray={i === 0 ? 'none' : '2 3'} />
+            {i > 0 && <line x1={P.l} y1={y | 0} x2={P.l + cW} y2={y | 0} stroke="var(--b2)" strokeWidth="1" strokeDasharray="2 3" />}
             <text x={P.l - 8} y={(y + 4) | 0} textAnchor="end" fill="var(--m2)" fontSize="9" fontFamily="system-ui">
               {datasets[0]?.yf ? datasets[0].yf(v) : axisFmt(v)}
             </text>

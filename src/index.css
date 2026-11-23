@@ -6,8 +6,8 @@
     --b2: rgba(255, 255, 255, .045);
     --t: #fff;
     --t2: #ddd;
-    --m: #888;
-    --m2: #666;
+    --m: #8f8f8f;
+    --m2: #7d7d7d;
     --ac: #7c3aed;
     --ac2: #a78bfa;
     --gr: #22c55e;
@@ -35,8 +35,8 @@
     --b2: rgba(23, 18, 43, .065);
     --t: #18151f;
     --t2: #3c384a;
-    --m: #67637a;
-    --m2: #837fa0;
+    --m: #605c72;
+    --m2: #6e6a85;
     --ac: #6d28d9;
     --ac2: #7c3aed;
     --gr: #15803d;
@@ -312,6 +312,29 @@ body {
     border-color: color-mix(in srgb, var(--accent) 45%, var(--b));
     transform: translateY(-2px);
     box-shadow: 0 10px 28px color-mix(in srgb, var(--accent) 12%, transparent);
+}
+
+.mc-link {
+    cursor: pointer;
+}
+
+.mc-arrow {
+    position: absolute;
+    top: 15px;
+    right: 15px;
+    width: 14px;
+    height: 14px;
+    color: var(--accent);
+    opacity: 0;
+    transform: translate(-3px, 3px);
+    transition: opacity .18s ease, transform .18s ease;
+    pointer-events: none;
+}
+
+.mc-link:hover .mc-arrow,
+.mc-link:focus-visible .mc-arrow {
+    opacity: .9;
+    transform: translate(0, 0);
 }
 
 .mc.gn {
