@@ -1,6 +1,24 @@
-import { useLayoutEffect, useRef, useState } from 'react';
+import { useId, useLayoutEffect, useRef, useState } from 'react';
 import { fmt } from '../lib/util';
 import { useTooltip } from './Tooltip';
+
+/** Build stable per-chart gradient ids for a set of colors, plus the <defs>. */
+function useBarGradients(colors, vertical) {
+  const raw = useId().replace(/[^a-zA-Z0-9]/g, '');
+  const ids = {};
+  colors.forEach((c) => { if (c && !ids[c]) ids[c] = `g${raw}${Object.keys(ids).length}`; });
+  const defs = (
+    <defs>
+      {Object.entries(ids).map(([color, id]) => (
+        <linearGradient key={id} id={id} x1="0" y1={vertical ? '0' : '0'} x2={vertical ? '0' : '1'} y2={vertical ? '1' : '0'}>
+          <stop offset="0" stopColor={color} stopOpacity={vertical ? '0.95' : '0.7'} />
+          <stop offset="1" stopColor={color} stopOpacity={vertical ? '0.5' : '1'} />
+        </linearGradient>
+      ))}
+    </defs>
+  );
+  return [ids, defs];
+}
 
 function useWidth(fallback) {
   const ref = useRef(null);
@@ -27,6 +45,7 @@ const NoData = ({ children }) => (
 export function BarChart({ labels, datasets, height = 200, money = false }) {
   const [ref, W] = useWidth(680);
   const { show, hide } = useTooltip();
+  const [gradIds, defs] = useBarGradients(datasets.map((d) => d.color), true);
   if (!labels || !labels.length) {
     return <div className="cw" ref={ref} style={{ minHeight: height }}><NoData>No data in selected range</NoData></div>;
   }
@@ -57,12 +76,13 @@ export function BarChart({ labels, datasets, height = 200, money = false }) {
 
   return wrap(
     <svg width={W} height={totalHeight} style={{ overflow: 'visible' }}>
+      {defs}
       {[0, 1, 2, 3, 4].map((i) => {
         const y = P.t + cH - (i / 4) * cH, v = (maxV * i) / 4;
         return (
           <g key={i}>
-            <line x1={P.l} y1={y | 0} x2={P.l + cW} y2={y | 0} stroke="var(--b2)" strokeWidth="1" />
-            <text x={P.l - 4} y={(y + 4) | 0} textAnchor="end" fill="var(--m2)" fontSize="9" fontFamily="system-ui">
+            <line x1={P.l} y1={y | 0} x2={P.l + cW} y2={y | 0} stroke="var(--b2)" strokeWidth="1" strokeDasharray={i === 0 ? 'none' : '2 3'} />
+            <text x={P.l - 8} y={(y + 4) | 0} textAnchor="end" fill="var(--m2)" fontSize="9" fontFamily="system-ui">
               {datasets[0]?.yf ? datasets[0].yf(v) : axisFmt(v)}
             </text>
           </g>
@@ -74,7 +94,7 @@ export function BarChart({ labels, datasets, height = 200, money = false }) {
         const x = P.l + i * (cW / labels.length) + (cW / labels.length - datasets.length * bW) / 2 + di * bW;
         const tv = d.vf ? d.vf(v, i) : axisFmt(v);
         return (
-          <rect key={`${di}-${i}`} x={x} y={P.t + cH - bH} width={bW} height={bH} fill={d.color} rx="3" opacity=".88"
+          <rect key={`${di}-${i}`} x={x} y={P.t + cH - bH} width={bW} height={bH} fill={`url(#${gradIds[d.color]})`} rx="4"
             style={{ cursor: 'pointer' }}
             onMouseEnter={(e) => show(e, <><b>{lbl}</b><br />{d.label || ''}: {tv}</>)} onMouseLeave={hide} />
         );
@@ -98,6 +118,8 @@ const CHAR_W = 5.7, MIN_L = 90, MAX_L = 230, ROW_H = 32;
 export function HBarChart({ labels, values, colors, vf, minHeight }) {
   const [ref, W] = useWidth(500);
   const { show, hide } = useTooltip();
+  const palette = Array.isArray(colors) ? colors : [colors];
+  const [gradIds, defs] = useBarGradients(palette, false);
   const wrap = (children) => <div className="cw" ref={ref} style={{ minHeight }}>{children}</div>;
   if (!labels || !labels.length) return wrap(<NoData>No data</NoData>);
 
@@ -107,21 +129,23 @@ export function HBarChart({ labels, values, colors, vf, minHeight }) {
   const allowed = Math.max(4, Math.floor((gutter - 14) / CHAR_W));
   const trunc = (l) => { l = String(l); return l.length > allowed ? l.slice(0, allowed - 1) + '…' : l; };
   const P = { l: gutter, r: 55, t: 4 };
-  const palette = Array.isArray(colors) ? colors : [colors];
 
   return wrap(
     <svg width={W} height={labels.length * ROW_H + P.t * 2}>
+      {defs}
       {labels.map((lbl, i) => {
         const y = P.t + i * ROW_H, bw = ((values[i] || 0) / maxV) * (W - P.l - P.r);
         const tv = vf ? vf(values[i]) : '' + Math.round(values[i]);
+        const color = palette[i % palette.length];
         return (
           <g key={i}>
-            <text x={P.l - 7} y={y + ROW_H / 2 + 4} textAnchor="end" fill="var(--m)" fontSize="10" fontFamily="system-ui">
+            <text x={P.l - 9} y={y + ROW_H / 2 + 4} textAnchor="end" fill="var(--m)" fontSize="10" fontFamily="system-ui">
               <title>{lbl}</title>{trunc(lbl)}
             </text>
-            <rect x={P.l} y={y + 5} width={Math.max(bw, 3)} height={ROW_H - 12} fill={palette[i % palette.length]} rx="3" opacity=".85"
+            <rect x={P.l} y={y + 4} width={W - P.l - P.r} height={ROW_H - 10} fill="var(--b2)" rx="5" />
+            <rect x={P.l} y={y + 4} width={Math.max(bw, 3)} height={ROW_H - 10} fill={`url(#${gradIds[color]})`} rx="5"
               style={{ cursor: 'pointer' }} onMouseEnter={(e) => show(e, `${lbl}: ${tv}`)} onMouseLeave={hide} />
-            <text x={P.l + bw + 7} y={y + ROW_H / 2 + 4} fill="var(--t2)" fontSize="10" fontFamily="system-ui">{tv}</text>
+            <text x={P.l + bw + 8} y={y + ROW_H / 2 + 4} fill="var(--t2)" fontSize="10" fontFamily="system-ui" fontWeight="600">{tv}</text>
           </g>
         );
       })}

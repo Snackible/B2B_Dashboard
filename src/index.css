@@ -122,10 +122,14 @@ body {
 
 .stl {
     font-size: 11px;
-    color: var(--m);
-    display: flex;
+    color: var(--t2);
+    display: inline-flex;
     align-items: center;
-    gap: 6px;
+    gap: 7px;
+    background: var(--s2);
+    border: 1px solid var(--b);
+    padding: 5px 11px 5px 10px;
+    border-radius: 100px;
 }
 
 .dot {
@@ -134,6 +138,11 @@ body {
     border-radius: 50%;
     background: var(--gr);
     flex-shrink: 0;
+    box-shadow: 0 0 0 3px color-mix(in srgb, var(--gr) 22%, transparent);
+}
+
+.dot.loading {
+    box-shadow: 0 0 0 3px color-mix(in srgb, var(--ye) 22%, transparent);
 }
 
 .dot.loading {
@@ -288,8 +297,10 @@ body {
 
 .mc {
     --accent: var(--ac);
-    background: var(--s);
-    border: 1px solid var(--b);
+    background:
+        radial-gradient(140% 130% at 100% -20%, color-mix(in srgb, var(--accent) 10%, transparent), transparent 55%),
+        var(--s);
+    border: 1px solid color-mix(in srgb, var(--accent) 15%, var(--b));
     border-radius: 14px;
     padding: 17px 18px;
     position: relative;
@@ -297,24 +308,10 @@ body {
     transition: border-color .18s ease, transform .18s ease, box-shadow .18s ease;
 }
 
-.mc::before {
-    content: '';
-    position: absolute;
-    inset: 0;
-    border-radius: inherit;
-    padding: 1px;
-    background: linear-gradient(160deg, color-mix(in srgb, var(--accent) 45%, transparent), transparent 42%);
-    -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
-    -webkit-mask-composite: xor;
-    mask-composite: exclude;
-    pointer-events: none;
-    opacity: .55;
-}
-
 .mc:hover {
-    border-color: color-mix(in srgb, var(--accent) 50%, var(--b));
+    border-color: color-mix(in srgb, var(--accent) 45%, var(--b));
     transform: translateY(-2px);
-    box-shadow: var(--shadow);
+    box-shadow: 0 10px 28px color-mix(in srgb, var(--accent) 12%, transparent);
 }
 
 .mc.gn {
@@ -342,24 +339,12 @@ body {
 }
 
 .ml {
-    display: flex;
-    align-items: center;
-    gap: 7px;
     font-size: 10px;
-    color: var(--m);
+    color: color-mix(in srgb, var(--accent) 70%, var(--m));
     text-transform: uppercase;
     letter-spacing: .09em;
     font-weight: 600;
     margin-bottom: 11px;
-}
-
-.ml::before {
-    content: '';
-    width: 6px;
-    height: 6px;
-    border-radius: 50%;
-    background: var(--accent);
-    flex-shrink: 0;
 }
 
 .mv {
@@ -369,6 +354,10 @@ body {
     font-variant-numeric: tabular-nums;
     line-height: 1.1;
     color: var(--t);
+}
+
+.mc .mv {
+    color: color-mix(in srgb, var(--accent) 88%, var(--t));
 }
 
 .ms {
@@ -382,23 +371,17 @@ body {
     margin-bottom: 20px;
 }
 
-.tabs-wrap::after {
-    content: '';
-    position: absolute;
-    top: 0;
-    right: 0;
-    bottom: 1px;
-    width: 28px;
-    background: linear-gradient(to right, transparent, var(--bg));
-    pointer-events: none;
-}
-
 .tabs {
     display: flex;
-    border-bottom: 1px solid var(--b);
+    gap: 2px;
     overflow-x: auto;
     scrollbar-width: none;
     -ms-overflow-style: none;
+    background: var(--s);
+    border: 1px solid var(--b);
+    border-radius: 12px;
+    padding: 5px;
+    box-shadow: var(--shadow-sm);
 }
 
 .tabs::-webkit-scrollbar {
@@ -406,25 +389,47 @@ body {
 }
 
 .tab {
-    padding: 10px 22px;
-    font-size: 13px;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 7px 14px;
+    font-size: 12.5px;
     font-weight: 500;
     color: var(--m);
     cursor: pointer;
-    border-bottom: 2px solid transparent;
-    margin-bottom: -1px;
+    border: none;
+    background: transparent;
+    border-radius: 8px;
     user-select: none;
     white-space: nowrap;
-    transition: color .15s ease, border-color .15s ease;
+    font-family: inherit;
+    transition: color .15s ease, background .15s ease;
 }
 
 .tab:hover {
     color: var(--t);
+    background: var(--b2);
 }
 
 .tab.on {
     color: var(--ac2);
-    border-bottom-color: var(--ac2);
+    background: color-mix(in srgb, var(--ac) 16%, transparent);
+    font-weight: 600;
+}
+
+.tab.tab-or {
+    color: var(--or);
+    font-weight: 600;
+}
+
+.tab.tab-or:hover {
+    color: var(--or);
+    background: color-mix(in srgb, var(--or) 12%, transparent);
+}
+
+.tab.tab-or.on {
+    color: var(--or);
+    background: color-mix(in srgb, var(--or) 18%, transparent);
 }
 
 .tp.on {
@@ -544,12 +549,12 @@ body {
 
 .tab-dot {
     display: inline-block;
-    width: 5px;
-    height: 5px;
+    width: 6px;
+    height: 6px;
     border-radius: 50%;
     background: var(--or);
-    margin-right: 6px;
-    vertical-align: 1px;
+    flex-shrink: 0;
+    box-shadow: 0 0 0 3px color-mix(in srgb, var(--or) 20%, transparent);
 }
 
 @keyframes paneIn {
@@ -1028,7 +1033,7 @@ body {
     }
 
     .tab {
-        padding: 10px 16px;
+        padding: 8px 13px;
         font-size: 12px;
     }
 

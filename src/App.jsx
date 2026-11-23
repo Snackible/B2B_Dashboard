@@ -127,13 +127,12 @@ export default function App() {
           </MetricGrid>
 
           <div className="tabs-wrap">
-            <div className="tabs">
+            <div className="tabs" role="tablist">
               {tabs.map(([id, label]) => (
-                <div key={id} className={`tab${tab === id ? ' on' : ''}`} onClick={() => setTab(id)}
-                  style={id === 'diwali' ? { color: tab === id ? undefined : 'var(--or)', fontWeight: 600 } : undefined}>
-                  {id === 'diwali' && <span className="tab-dot" />}
+                <button key={id} type="button" role="tab" aria-selected={tab === id}
+                  className={`tab${tab === id ? ' on' : ''}${id === 'diwali' ? ' tab-or' : ''}`} onClick={() => setTab(id)}>
                   {label}
-                </div>
+                </button>
               ))}
             </div>
           </div>
