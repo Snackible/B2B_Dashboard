@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import {
-  SHEET_URL, LEGACY_URL, NOOR_URL, BD_URL, DIWALI_URL, SAMPLES_URL, SAMPLE_TIERS,
+  SHEET_URL, TOTAL_SALES_URL, LEGACY_URL, NOOR_URL, BD_URL, DIWALI_URL, SAMPLES_URL, SAMPLE_TIERS,
 } from '../config';
 import {
   parseSales, parseMasterLog, parseAds, parseInmails, parsePendingSales, parseCcbd, parseCcbdFestive,
@@ -16,10 +16,10 @@ const INITIAL = {
 };
 
 // Each source feeds one or more tabs; a tab's loading banner stays up until every source feeding it settles.
-const SOURCES = ['sheet', 'legacy', 'noor', 'bd', 'diwali'];
+const SOURCES = ['sheet', 'sales', 'legacy', 'noor', 'bd', 'diwali'];
 export const BAR_SOURCES = {
-  ov: ['sheet', 'legacy'],
-  sales: ['sheet'],
+  ov: ['sheet', 'sales', 'legacy'],
+  sales: ['sales'],
   mails: ['legacy', 'noor'],
   ads: ['sheet'],
   inmails: ['sheet'],
@@ -65,11 +65,10 @@ export function useDashboardData() {
       settle(src);
     };
 
-    // Sales_Log/Ads_Log/InMails all live on this one "ops" fetch.
+    // Ads_Log/InMails live on this fetch.
     getJson(SHEET_URL, signal, { timeout: 60000 })
       .then((raw) => {
         const p = {};
-        const sales = parseSales(raw); if (sales) p.sales = sales;
         const ads = parseAds(raw); if (ads) p.ads = ads;
         const inmails = parseInmails(raw); if (inmails) p.inmails = inmails;
         patch(p);
@@ -77,6 +76,14 @@ export function useDashboardData() {
         settle('sheet');
       })
       .catch(onFail('sheet', 'SHEET_URL fetch error', () => setStatus({ text: 'cached data (fetch failed)', loading: false })));
+
+    getJson(TOTAL_SALES_URL, signal, { timeout: 60000 })
+      .then((raw) => {
+        const sales = parseSales(raw);
+        if (sales) patch({ sales });
+        settle('sales');
+      })
+      .catch(onFail('sales', 'TOTAL_SALES_URL fetch error'));
 
     // One fetch feeds Mails / CCBD / Pending Sales / Pending Delivery.
     getJson(LEGACY_URL, signal, { timeout: 60000 })

@@ -11,10 +11,10 @@ export const SAMPLES_URL = '/api/sheets?source=samples';
 export const DIWALI_URL = '/api/sheets?source=diwali';
 export const NOOR_URL = '/api/sheets?source=noor';
 export const BD_URL = '/api/sheets?source=bd'; // "Sheet1" + "Recurring clients" tabs confirmed
-// Also fixes the previously-broken Sales tab: parseSales falls back to a
-// "Sales_Log"-named key, which this source provides (222 rows, verified
-// identical to the old Apps Script Sales_Log tab).
-export const SHEET_URL = '/api/sheets?source=ops';
+export const SHEET_URL = '/api/sheets?source=ops'; // Ads_Log + InMails
+// "Sales Dashboard FY | 26-27" / Active Orders — the live replacement for the
+// old Sales_Log tab, which stopped getting new rows after 19/08/2026.
+export const TOTAL_SALES_URL = '/api/sheets?source=sales';
 
 // LEGACY_URL: CCBD_BAU/Festive/Diwali and Sales_Log/Ads_Log/InMails now come
 // from Sheets API (verified row-for-row against the old Apps Script output).

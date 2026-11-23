@@ -52,12 +52,19 @@ const SOURCES = {
     id: '1AKDPhz1RvZoNDL5RSYeg7wRu4vInRHFCRsTvmDYOueM',
     tabs: { CCBD_BAU: 'BAU', CCBD_Festive: 'Festive', CCBD_Diwali: 'Diwali CCBD' },
   },
-  // Row counts verified identical to the Apps Script output for all three tabs.
-  // Sales_Log here also doubles as SHEET_URL's data (parseSales falls back to
-  // a "Sales_Log"-named key), fixing the previously-broken Sales tab.
+  // Row counts verified identical to the Apps Script output for both tabs.
   ops: {
     id: '1XWnWJO2UWvtNaoHVBcrEkHEWyvDnermcpPrceAkLas4',
-    tabs: { Sales_Log: 'Sales_Log', Ads_Log: 'Ads_Log', InMails: 'InMails ' },
+    tabs: { Ads_Log: 'Ads_Log', InMails: 'InMails ' },
+  },
+  // The old OPS_ID "Sales_Log" tab stopped being updated after 19/08/2026 —
+  // someone started a replacement spreadsheet ("Sales Dashboard FY | 26-27")
+  // instead. Same column layout (Ref/Order Type/PO Date/Order Date/POC/
+  // Client Name/Gross Sales), just under "Active Orders", and kept live.
+  // Returned under the "Sales_Log" key so parseSales finds it unchanged.
+  sales: {
+    id: '1tn_pzuBoiPhjmCggTPL1edvEjTW4CHRAtx3yEQeRkrQ',
+    tabs: { Sales_Log: 'Active Orders' },
   },
 };
 
