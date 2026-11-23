@@ -67,7 +67,7 @@ export default function App() {
   const tabs = [
     ['ov', 'Overview'], ['sales', 'Sales'], ['mails', 'Mails'], ['ads', 'Ads'], ['inmails', 'InMails'],
     ['ccbd', 'CCBD Leads'], ['samples', 'Sample Data'], ['recurring', 'Recurring Clients'],
-    ['bd', 'Active Conversations'], ['diwali', '✨ Diwali Campaign'], ['pend', 'Pending Delivery'], ['pendsales', 'Pending Sales'],
+    ['bd', 'Active Conversations'], ['diwali', 'Diwali'], ['pend', 'Pending Delivery'], ['pendsales', 'Pending Sales'],
   ];
   const panes = {
     ov: <Overview view={view} loading={isLoading('ov')} ready={ready} />,
@@ -130,7 +130,10 @@ export default function App() {
             <div className="tabs">
               {tabs.map(([id, label]) => (
                 <div key={id} className={`tab${tab === id ? ' on' : ''}`} onClick={() => setTab(id)}
-                  style={id === 'diwali' ? { color: tab === id ? undefined : 'var(--or)', fontWeight: 600 } : undefined}>{label}</div>
+                  style={id === 'diwali' ? { color: tab === id ? undefined : 'var(--or)', fontWeight: 600 } : undefined}>
+                  {id === 'diwali' && <span className="tab-dot" />}
+                  {label}
+                </div>
               ))}
             </div>
           </div>

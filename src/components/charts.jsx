@@ -27,11 +27,23 @@ const NoData = ({ children }) => (
 export function BarChart({ labels, datasets, height = 200, money = false }) {
   const [ref, W] = useWidth(680);
   const { show, hide } = useTooltip();
-  const wrap = (children) => <div className="cw" ref={ref} style={{ minHeight: height }}>{children}</div>;
-  if (!labels || !labels.length) return wrap(<NoData>No data in selected range</NoData>);
+  if (!labels || !labels.length) {
+    return <div className="cw" ref={ref} style={{ minHeight: height }}><NoData>No data in selected range</NoData></div>;
+  }
 
-  const P = { t: 8, r: 10, b: 65, l: 55 };
-  const cW = W - P.l - P.r, cH = height - P.t - P.b;
+  // Rotated (-45deg) labels extend diagonally *below* their tick, not above
+  // it — a long label needs real room reserved in the bottom margin or its
+  // tail spills out past the card. Size that margin off the longest label
+  // instead of a fixed guess, and grow the chart to fit it rather than
+  // shrinking the plot area.
+  const CHAR_W = 5.4;
+  const maxLabelLen = labels.reduce((m, l) => Math.max(m, String(l).length), 0);
+  const labelTail = Math.ceil(maxLabelLen * CHAR_W * Math.SQRT1_2);
+  const P = { t: 8, r: 10, b: Math.min(100, Math.max(40, labelTail + 22)), l: 55 };
+  const cH = height - P.t;
+  const totalHeight = P.t + cH + P.b;
+  const wrap = (children) => <div className="cw" ref={ref} style={{ minHeight: totalHeight }}>{children}</div>;
+  const cW = W - P.l - P.r;
   const maxV = Math.max(1, ...datasets.flatMap((d) => d.data));
   const bW = Math.min(((cW / labels.length) * 0.8) / datasets.length, 34);
   const axisFmt = (n) => {
@@ -44,7 +56,7 @@ export function BarChart({ labels, datasets, height = 200, money = false }) {
   const labelStep = Math.max(1, Math.ceil(labels.length / 18));
 
   return wrap(
-    <svg width={W} height={height} style={{ overflow: 'visible' }}>
+    <svg width={W} height={totalHeight} style={{ overflow: 'visible' }}>
       {[0, 1, 2, 3, 4].map((i) => {
         const y = P.t + cH - (i / 4) * cH, v = (maxV * i) / 4;
         return (
@@ -69,7 +81,7 @@ export function BarChart({ labels, datasets, height = 200, money = false }) {
       }))}
       {labels.map((lbl, i) => {
         if (i % labelStep !== 0 && i !== labels.length - 1) return null;
-        const x = (P.l + i * (cW / labels.length) + cW / labels.length / 2) | 0, ty = height - 8;
+        const x = (P.l + i * (cW / labels.length) + cW / labels.length / 2) | 0, ty = P.t + cH + 13;
         return (
           <text key={i} x={x} y={ty} textAnchor="end" fill="var(--m)" fontSize="9" fontFamily="system-ui" transform={`rotate(-45,${x},${ty})`}>{lbl}</text>
         );

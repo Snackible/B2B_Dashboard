@@ -400,6 +400,16 @@ body {
     animation: paneIn .18s ease;
 }
 
+.tab-dot {
+    display: inline-block;
+    width: 5px;
+    height: 5px;
+    border-radius: 50%;
+    background: var(--or);
+    margin-right: 6px;
+    vertical-align: 1px;
+}
+
 @keyframes paneIn {
     from {
         opacity: 0;

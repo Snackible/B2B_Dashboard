@@ -7,9 +7,15 @@ import { fd, inRange, lsGet, lsSet, pct } from '../lib/util';
 
 const PHASE_COLOR = { Cold: 'var(--bl)', Hot: 'var(--or)', Converted: 'var(--gr)', Unknown: 'var(--m)' };
 const PHASES = ['Cold', 'Hot', 'Converted'];
-const PHASE_LABEL = { Cold: '❄️ Cold', Hot: '🔥 Hot', Converted: '✅ Converted' };
 const mdSlash = (d) => d.slice(5).replace('-', '/');
 const leadId = (b) => (b.company + b.name).replace(/\s+/g, '_');
+
+/** Small colored dot in place of an emoji, for phase/column headers. */
+const Dot = ({ color }) => (
+  <span style={{
+    display: 'inline-block', width: 7, height: 7, borderRadius: '50%', background: color, marginRight: 7, flexShrink: 0,
+  }} />
+);
 
 /** Per-lead "converted?" dropdown + done tick, persisted in this browser only. */
 function LeadRow({ b }) {
@@ -40,7 +46,7 @@ function LeadRow({ b }) {
         <input type="checkbox" checked={tick} style={{ cursor: 'pointer', width: 16, height: 16, accentColor: 'var(--gr)' }}
           onChange={(e) => { setTick(e.target.checked); save(tickKey, String(e.target.checked)); }} />
       </td>
-      <td style={{ color: 'var(--ye)', fontSize: 11 }}>{b.followup ? '⏰ ' + mdSlash(b.followup) : '—'}</td>
+      <td style={{ color: 'var(--ye)', fontSize: 11 }}>{b.followup ? mdSlash(b.followup) : '—'}</td>
       <td style={{ color: 'var(--m)', maxWidth: 200, whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>{b.remarks}</td>
     </tr>
   );
@@ -48,20 +54,24 @@ function LeadRow({ b }) {
 
 function PipelineCard({ leads }) {
   return leads.length ? leads.map((b, i) => (
-    <div key={i} style={{ background: 'var(--s2)', borderRadius: 8, padding: 10, marginBottom: 8 }}>
+    <div key={i} style={{ background: 'var(--s2)', borderRadius: 8, padding: '10px 10px 9px' }}>
       <div style={{ fontSize: 12, fontWeight: 600, color: 'var(--t)', marginBottom: 3 }}>{b.company || b.name}</div>
       {b.company && <div style={{ fontSize: 11, color: 'var(--m)', marginBottom: 3 }}>{b.name}</div>}
-      <div style={{ fontSize: 10, color: 'var(--m)', display: 'flex', gap: 8, flexWrap: 'wrap', marginTop: 4 }}>
-        <span>📅 {mdSlash(b.date)}</span>
-        {b.poc && <span>👤 {b.poc}</span>}
+      <div style={{ fontSize: 10, color: 'var(--m)', display: 'flex', gap: 8, flexWrap: 'wrap', alignItems: 'center', marginTop: 4 }}>
+        <span>{mdSlash(b.date)}</span>
+        {b.poc && <span>{b.poc}</span>}
         {b.source && <span style={{ background: 'rgba(124,58,237,.15)', color: 'var(--ac2)', padding: '1px 5px', borderRadius: 3 }}>{b.source.trim()}</span>}
       </div>
       {b.remarks && (
-        <div style={{ fontSize: 10, color: 'var(--m)', marginTop: 5, paddingTop: 5, borderTop: '1px solid rgba(255,255,255,.05)' }}>
+        <div style={{ fontSize: 10, color: 'var(--m)', marginTop: 6, paddingTop: 6, borderTop: '1px solid var(--b2)' }}>
           {b.remarks.slice(0, 60) + (b.remarks.length > 60 ? '…' : '')}
         </div>
       )}
-      {b.followup && <div style={{ fontSize: 10, color: 'var(--ye)', marginTop: 3 }}>⏰ Follow-up: {mdSlash(b.followup)}</div>}
+      {b.followup && (
+        <div style={{ fontSize: 10, color: 'var(--ye)', marginTop: 6, paddingTop: 6, borderTop: '1px solid var(--b2)' }}>
+          Follow-up {mdSlash(b.followup)}
+        </div>
+      )}
     </div>
   )) : <div style={{ color: 'var(--m)', fontSize: 12, textAlign: 'center', padding: 16 }}>No leads</div>;
 }
@@ -102,7 +112,7 @@ export default function Bd({ data, filters, loading }) {
         {PHASES.map((ph) => {
           const leads = bd.filter((b) => b.phase === ph), col = PHASE_COLOR[ph];
           return (
-            <Card key={ph} style={{ borderTop: `2px solid ${col}` }} title={PHASE_LABEL[ph]}
+            <Card key={ph} style={{ borderTop: `2px solid ${col}` }} title={<><Dot color={col} />{ph}</>}
               right={<span style={{ background: col + '22', color: col, padding: '2px 8px', borderRadius: 10, fontSize: 11, fontWeight: 600 }}>{leads.length}</span>}>
               <PipelineCard leads={leads} />
             </Card>
@@ -111,7 +121,7 @@ export default function Bd({ data, filters, loading }) {
       </div>
       <div className="g1">
         <Card title="All Conversations">
-          <Table head={['Date', 'Company', 'Contact', 'POC', 'Source', 'Phase', { label: 'Converted?', style: { width: 100 } }, { label: '✔', style: { width: 40, textAlign: 'center' } }, 'Follow-up', 'Remarks']}>
+          <Table head={['Date', 'Company', 'Contact', 'POC', 'Source', 'Phase', { label: 'Converted?', style: { width: 100 } }, { label: 'Done', style: { width: 40, textAlign: 'center' } }, 'Follow-up', 'Remarks']}>
             {bd.length ? bd.map((b, i) => <LeadRow key={`${leadId(b)}-${i}`} b={b} />) : <EmptyRow cols={10}>No leads found</EmptyRow>}
           </Table>
         </Card>

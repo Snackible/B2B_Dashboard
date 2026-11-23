@@ -120,7 +120,7 @@ export default function Ccbd({ data, filters, loading }) {
   return (
     <>
       <Tierbar show={loading}>Loading CCBD leads…</Tierbar>
-      <SubTabs tabs={[['inbound', '📞 Inbound Leads'], ['festive', '🎉 Festive Leads']]} value={sub} onChange={setSub} />
+      <SubTabs tabs={[['inbound', 'Inbound Leads'], ['festive', 'Festive Leads']]} value={sub} onChange={setSub} />
       {sub === 'inbound' ? <Inbound data={data} {...filters} /> : <Festive data={data} {...filters} />}
     </>
   );

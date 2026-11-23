@@ -13,7 +13,7 @@ const EVENTS = [
   { id: 'resp', label: 'Responded', color: 'var(--gr)' },
 ];
 const EVENT_OPTIONS = [['all', 'All Events'], ...EVENTS.map((e) => [e.id, e.label])];
-const TYPE_BUTTONS = [['all', 'All Mails'], ['primary', '🟢 Primary'], ['followup', '🔄 Follow-ups']];
+const TYPE_BUTTONS = [['all', 'All Mails'], ['primary', 'Primary'], ['followup', 'Follow-ups']];
 const TYPE_LABEL = { all: 'Showing all mails', primary: 'Showing primary mails only', followup: 'Showing follow-up mails only' };
 
 function groupSum(rows, keyOf) {
