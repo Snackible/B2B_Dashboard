@@ -72,7 +72,17 @@ export function BarChart({ labels, datasets, height = 200, money = false }) {
   };
 
   // Past ~18 bars every x label piles into a knot, so only show every Nth.
+  // The final label is always shown, but if it lands too close to the last
+  // stepped one they'd overlap — swap the near-neighbor out instead of both in.
   const labelStep = Math.max(1, Math.ceil(labels.length / 18));
+  const steppedIdx = [];
+  for (let i = 0; i < labels.length; i += labelStep) steppedIdx.push(i);
+  const lastIdx = labels.length - 1;
+  if (steppedIdx[steppedIdx.length - 1] !== lastIdx) {
+    if (lastIdx - steppedIdx[steppedIdx.length - 1] < labelStep) steppedIdx[steppedIdx.length - 1] = lastIdx;
+    else steppedIdx.push(lastIdx);
+  }
+  const shownLabels = new Set(steppedIdx);
 
   return wrap(
     <svg width={W} height={totalHeight} style={{ overflow: 'visible' }}>
@@ -100,7 +110,7 @@ export function BarChart({ labels, datasets, height = 200, money = false }) {
         );
       }))}
       {labels.map((lbl, i) => {
-        if (i % labelStep !== 0 && i !== labels.length - 1) return null;
+        if (!shownLabels.has(i)) return null;
         const x = (P.l + i * (cW / labels.length) + cW / labels.length / 2) | 0, ty = P.t + cH + 13;
         return (
           <text key={i} x={x} y={ty} textAnchor="end" fill="var(--m)" fontSize="9" fontFamily="system-ui" transform={`rotate(-45,${x},${ty})`}>{lbl}</text>
