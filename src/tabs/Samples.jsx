@@ -139,7 +139,7 @@ export default function Samples({ data, filters, tierLabel }) {
       </div>
       <div className="g1">
         <Card title="All Sample Requests">
-          <Table head={['Date', 'Product Sampled', 'Client', 'Qty', 'Requested By', 'Dispatch']}>
+          <Table head={['Date', 'Product Sampled', 'Client', { label: 'Qty', style: { textAlign: 'right' } }, 'Requested By', 'Dispatch']}>
             {grouped.length ? grouped.map((g, i) => {
               const top = { verticalAlign: 'top', paddingTop: 12 };
               return (
@@ -147,7 +147,7 @@ export default function Samples({ data, filters, tierLabel }) {
                   <td style={top}>{fd(g.date)}</td>
                   <td style={{ color: 'var(--t)', lineHeight: 1.6, ...top }}>{g.products.map((p, j) => <div key={j}>• {p}</div>)}</td>
                   <td style={{ color: 'var(--t2)', ...top }}>{g.client || '—'}</td>
-                  <td style={{ fontFamily: 'monospace', color: 'var(--ac2)', fontWeight: 600, ...top }}>{g.totalQty}</td>
+                  <td style={{ textAlign: 'right', color: 'var(--ac2)', fontWeight: 600, ...top }}>{g.totalQty}</td>
                   <td style={top}><Badge kind="poc">{g.req_by}</Badge></td>
                   <td style={{ color: 'var(--m)', ...top }}>—</td>
                 </tr>

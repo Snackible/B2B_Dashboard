@@ -129,7 +129,7 @@ export default function App() {
           <div className="tabs-wrap">
             <div className="tabs" role="tablist">
               {tabs.map(([id, label]) => (
-                <button key={id} type="button" role="tab" aria-selected={tab === id}
+                <button key={id} type="button" role="tab" id={`tab-${id}`} aria-selected={tab === id} aria-controls={`panel-${id}`}
                   className={`tab${tab === id ? ' on' : ''}${id === 'diwali' ? ' tab-or' : ''}`} onClick={() => setTab(id)}>
                   {label}
                 </button>
@@ -139,7 +139,8 @@ export default function App() {
 
           {/* Every pane stays mounted (just hidden) so per-tab filters survive tab switches. */}
           {tabs.map(([id]) => (
-            <div key={id} className={`tp${tab === id ? ' on' : ''}`}>{panes[id]}</div>
+            <div key={id} id={`panel-${id}`} role="tabpanel" aria-labelledby={`tab-${id}`} aria-hidden={tab !== id}
+              className={`tp${tab === id ? ' on' : ''}`}>{panes[id]}</div>
           ))}
         </div>
       </FlashProvider>

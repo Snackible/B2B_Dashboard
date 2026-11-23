@@ -881,6 +881,10 @@ body {
     white-space: nowrap;
 }
 
+.mrow>span:not(:first-child) {
+    text-align: right;
+}
+
 .mhdr {
     color: var(--m);
     font-size: 10px;

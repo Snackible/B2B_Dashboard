@@ -106,7 +106,7 @@ export function PendingSamples({ data, filters, loading }) {
       </div>
       <div className="g1">
         <Card title="All Pending Samples" right={<MonoCount>{sm.length} samples shown</MonoCount>}>
-          <Table head={['Ref', 'Date', 'Product', 'Size', 'Qty', 'Client', 'Company', 'POC', 'Type', 'Dispatch']}>
+          <Table head={['Ref', 'Date', 'Product', 'Size', { label: 'Qty', style: { textAlign: 'right' } }, 'Client', 'Company', 'POC', 'Type', 'Dispatch']}>
             {rows.length ? rows.map((s, i) => {
               const bauRow = isBau(s);
               return (
@@ -115,7 +115,7 @@ export function PendingSamples({ data, filters, loading }) {
                   <td>{fd(s.date)}</td>
                   <td style={{ color: 'var(--t)', maxWidth: 200, ...ellipsis }}>{s.product || '—'}</td>
                   <td style={{ color: 'var(--m)' }}>{s.grammage || '—'}</td>
-                  <td style={{ fontFamily: 'monospace', color: 'var(--gr)' }}>{s.qty || 1}</td>
+                  <td style={{ textAlign: 'right', color: 'var(--gr)' }}>{s.qty || 1}</td>
                   <td style={{ color: 'var(--t2)' }}>{s.client || '—'}</td>
                   <td style={{ color: 'var(--t2)', maxWidth: 140, ...ellipsis }}>{companyOf(s) || '—'}</td>
                   <td><Badge kind="poc">{s.poc || '—'}</Badge></td>
