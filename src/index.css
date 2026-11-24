@@ -397,6 +397,8 @@ body {
 .tabs {
     display: flex;
     gap: 2px;
+    width: fit-content;
+    max-width: 100%;
     overflow-x: auto;
     scrollbar-width: none;
     -ms-overflow-style: none;
