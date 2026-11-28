@@ -66,6 +66,21 @@ const SOURCES = {
     id: '1tn_pzuBoiPhjmCggTPL1edvEjTW4CHRAtx3yEQeRkrQ',
     tabs: { Sales_Log: 'Active Orders' },
   },
+  // "Database YE- April26" — a second mail-merge outreach database (Diwali +
+  // Year-End campaigns), ~70 industry-named tabs each with their own
+  // "Previous Merge - <date>" columns (parsed by parseNoor, same as "noor").
+  // Excludes admin/audit tabs (Master_Log alone is 80K+ rows and redundant —
+  // the per-tab merge columns already carry everything it logs) and "Copy
+  // of …" duplicates.
+  ye: {
+    id: '1DhFKoZMQt6tKJEmuUHkoGfR9H29outde4rOrXrr_ScA',
+    dynamic: true,
+    exclude: [
+      'Master_Log', 'Dashboard', 'Timeline', 'Suppression', 'Lead Submissions',
+      'Sodexo Combined', 'Sheet105', 'Sheet106', 'Sheet45',
+      'Follow-up on: Diwali july financial services- september',
+    ],
+  },
 };
 
 export default async function handler(req, res) {
@@ -84,7 +99,9 @@ export default async function handler(req, res) {
   if (!cfg) { res.status(400).json({ error: `Unknown source "${source}"` }); return; }
   try {
     const tabs = cfg.dynamic
-      ? Object.fromEntries((await listTabTitles(cfg.id)).map((t) => [t, t]))
+      ? Object.fromEntries((await listTabTitles(cfg.id))
+          .filter((t) => !t.startsWith('Copy of') && !(cfg.exclude || []).includes(t))
+          .map((t) => [t, t]))
       : cfg.tabs;
     const data = await fetchTabs(cfg.id, tabs);
     res.status(200).json(data);

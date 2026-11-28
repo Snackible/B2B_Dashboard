@@ -10,6 +10,10 @@ export const SAMPLES_URL = '/api/sheets?source=samples';
 // and/or column layouts verified to match the Apps Script output.
 export const DIWALI_URL = '/api/sheets?source=diwali';
 export const NOOR_URL = '/api/sheets?source=noor';
+// "Database YE- April26" — a second mail-merge outreach database (Diwali +
+// Year-End campaigns across ~70 industry tabs), same "Previous Merge - <date>"
+// column format as Noor, parsed the same way.
+export const YE_URL = '/api/sheets?source=ye';
 export const BD_URL = '/api/sheets?source=bd'; // "Sheet1" + "Recurring clients" tabs confirmed
 export const SHEET_URL = '/api/sheets?source=ops'; // Ads_Log + InMails
 // "Sales Dashboard FY | 26-27" / Active Orders — the live replacement for the

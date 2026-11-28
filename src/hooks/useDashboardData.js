@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import {
-  SHEET_URL, TOTAL_SALES_URL, LEGACY_URL, NOOR_URL, BD_URL, DIWALI_URL, SAMPLES_URL, SAMPLE_TIERS,
+  SHEET_URL, TOTAL_SALES_URL, LEGACY_URL, NOOR_URL, YE_URL, BD_URL, DIWALI_URL, SAMPLES_URL, SAMPLE_TIERS,
 } from '../config';
 import {
   parseSales, parseMasterLog, parseAds, parseInmails, parsePendingSales, parseCcbd, parseCcbdFestive,
@@ -9,18 +9,18 @@ import {
 
 const INITIAL = {
   sales: [], ads: [], inmails: [],
-  mlByDate: [], mlByInd: [], mlPrimary: [], mlFollowup: [], mlIndDate: [], noorByDate: [],
+  mlByDate: [], mlByInd: [], mlPrimary: [], mlFollowup: [], mlIndDate: [], noorByDate: [], yeByDate: [],
   ccbd: [], ccbdFestive: [], pendingSales: [], pendingSamples: [],
   bd: [], recurring: [], samples: [],
   diwali: { linkedin: [], coldCalls: [], targets: null, tabKeys: [], email: [] },
 };
 
 // Each source feeds one or more tabs; a tab's loading banner stays up until every source feeding it settles.
-const SOURCES = ['sheet', 'sales', 'legacy', 'noor', 'bd', 'diwali'];
+const SOURCES = ['sheet', 'sales', 'legacy', 'noor', 'ye', 'bd', 'diwali'];
 export const BAR_SOURCES = {
   ov: ['sheet', 'sales', 'legacy'],
   sales: ['sales'],
-  mails: ['legacy', 'noor'],
+  mails: ['legacy', 'noor', 'ye'],
   ads: ['sheet'],
   inmails: ['sheet'],
   ccbd: ['legacy'],
@@ -105,6 +105,11 @@ export function useDashboardData() {
     getJson(NOOR_URL, signal)
       .then((raw) => { patch({ noorByDate: parseNoor(raw) }); settle('noor'); })
       .catch(onFail('noor', 'Noor Database fetch failed'));
+
+    // ~70 tabs — give it more room than the smaller fetches above.
+    getJson(YE_URL, signal, { timeout: 90000 })
+      .then((raw) => { patch({ yeByDate: parseNoor(raw) }); settle('ye'); })
+      .catch(onFail('ye', 'YE Database fetch failed'));
 
     getJson(BD_URL, signal)
       .then((raw) => {

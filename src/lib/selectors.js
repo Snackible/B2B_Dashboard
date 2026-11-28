@@ -2,11 +2,11 @@ import { inRange } from './util';
 
 const KEYS = ['del', 'open', 'click', 'resp', 'bounce'];
 
-/** Master_Log daily totals with the Noor mail-merge sends folded in, so "All Mails" covers every campaign. */
+/** Master_Log daily totals with the Noor + YE mail-merge sends folded in, so "All Mails" covers every campaign. */
 export function combinedByDate(data) {
-  if (!data.noorByDate.length) return data.mlByDate;
+  if (!data.noorByDate.length && !data.yeByDate.length) return data.mlByDate;
   const map = {};
-  [...data.mlByDate, ...data.noorByDate].forEach((d) => {
+  [...data.mlByDate, ...data.noorByDate, ...data.yeByDate].forEach((d) => {
     const m = (map[d.date] ||= { date: d.date, del: 0, open: 0, click: 0, resp: 0, bounce: 0 });
     KEYS.forEach((k) => { m[k] += d[k] || 0; });
   });
